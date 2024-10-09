@@ -3,6 +3,13 @@
 - 📖 [Remix docs](https://remix.run/docs)
 - 📖 [Remix Cloudflare docs](https://remix.run/guides/vite#cloudflare)
 
+# 事前準備
+```
+# supabase cli をインストール
+brew install supabase/tap/supabase
+supabase login
+```
+
 ## Development
 
 Run the dev server:

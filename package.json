@@ -12,7 +12,8 @@
     "typecheck": "tsc",
     "typegen": "wrangler types",
     "preview": "npm run build && wrangler pages dev",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "supabase-typegen": "supabase gen types typescript --project-id \"lyfolpqxqktrbmnuhghc\" > ./app/types/supabase.ts"
   },
   "dependencies": {
     "@remix-run/cloudflare": "^2.12.0",
