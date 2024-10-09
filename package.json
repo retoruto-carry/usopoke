@@ -18,6 +18,8 @@
     "@remix-run/cloudflare": "^2.12.0",
     "@remix-run/cloudflare-pages": "^2.12.0",
     "@remix-run/react": "^2.12.0",
+    "@supabase/auth-helpers-remix": "^0.4.0",
+    "@supabase/supabase-js": "^2.45.4",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

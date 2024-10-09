@@ -1,5 +1,5 @@
-import type { MetaFunction } from "@remix-run/cloudflare";
-
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
@@ -7,10 +7,16 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export async function loader({ context }: LoaderFunctionArgs) {
+  const env = context.cloudflare.env;
+  console.log("env", env);
+  return json({});
+}
+
 export default function Index() {
   return (
     <div className="flex h-screen items-center justify-center">
-      <h1>Hello xxxxxxx</h1>
+      <h1>aaa</h1>
     </div>
   );
 }
