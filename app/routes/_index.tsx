@@ -1,24 +1,22 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
+import { useLoaderData } from "@remix-run/react";
+
+import { json, LoaderFunctionArgs } from "@remix-run/node";
 import Login from "~/components/ui/login";
-export const meta: MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
+import createServerSupabase from "~/utils/supabase.server";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const response = new Response();
+  const supabase = createServerSupabase({ request, response });
+  const { data } = await supabase.from("todo_list").select();
+  return json({ todo_list: data ?? [] }, { headers: response.headers });
 };
 
-export async function loader({ context }: LoaderFunctionArgs) {
-  const env = context.cloudflare.env;
-  console.log("env", env);
-  return json({});
-}
-
 export default function Index() {
+  const { todo_list } = useLoaderData<typeof loader>();
   return (
-    <div className="flex h-screen items-center justify-center">
-      <h1>aaa</h1>
+    <>
       <Login />
-    </div>
+      <pre>{JSON.stringify(todo_list, null, 2)}</pre>
+    </>
   );
 }

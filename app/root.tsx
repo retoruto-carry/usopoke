@@ -1,4 +1,6 @@
-import type { LinksFunction } from "@remix-run/cloudflare";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
+import createServerSupabase from "./utils/supabase.server";
+
 import {
   json,
   Links,
@@ -10,9 +12,9 @@ import {
 } from "@remix-run/react";
 
 import "./tailwind.css";
-import { useState } from "react";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
 import { Database } from "./types/supabase";
+import { createBrowserClient, SupabaseClient } from "@supabase/auth-helpers-remix";
 
 const SUPABASE_URL = "https://lyfolpqxqktrbmnuhghc.supabase.co"
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Zm9scHF4cWt0cmJtbnVoZ2hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgzODczODUsImV4cCI6MjA0Mzk2MzM4NX0.T7-Y6q3tBmfDWDq5scg1bMK7HA5j49tHxrPywr6YzrI"
@@ -55,20 +57,40 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const env = {
     SUPABASE_URL: SUPABASE_URL!,
     SUPABASE_ANON_KEY: SUPABASE_ANON_KEY!,
   };
 
-  return json({ env });
+  const response = new Response();
+  const supabase = createServerSupabase({ request, response });
+
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  console.log({ client: { session } });
+
+  return json({ env, session }, { headers: response.headers });
 };
 
 export default function App() {
-  const { env } = useLoaderData<typeof loader>();
+  const { env, session } = useLoaderData<typeof loader>();
+
+  console.log({ server: { session } });
 
   const [supabase] = useState(() =>
-    createClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
+    createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
   );
+
+  useEffect(() => {
+    supabase.auth
+      .getSession()
+      .then((session) => console.log({ client: { session } }));
+  }, []);
+
+
   return <Outlet context={{ supabase }} />;
 }
