@@ -1,6 +1,7 @@
 #:schema node_modules/wrangler/config-schema.json
 name = "remix-cloudflare-sample"
-compatibility_date = "2024-10-04"
+compatibility_flags = ["nodejs_compat"]
+compatibility_date = "2024-09-23"
 pages_build_output_dir = "./build/client"
 
 # Automatically place your workloads in an optimal location to minimize latency.

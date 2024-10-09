@@ -1,6 +1,6 @@
-import { useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { json, useLoaderData } from "@remix-run/react";
 
-import { json, LoaderFunctionArgs } from "@remix-run/node";
 import Login from "~/components/ui/login";
 import createServerSupabase from "~/utils/supabase.server";
 
