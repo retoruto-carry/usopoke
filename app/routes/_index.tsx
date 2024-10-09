@@ -2,7 +2,7 @@ import { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json, useLoaderData } from "@remix-run/react";
 
 import Login from "~/components/ui/login";
-import createServerSupabase from "~/utils/supabase.server";
+import { createServerSupabase } from "~/utils/supabase.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();

@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
-import createServerSupabase from "./utils/supabase.server";
+import { createServerSupabase } from "./utils/supabase.server";
 
 import {
   json,
@@ -72,16 +72,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     data: { session },
   } = await supabase.auth.getSession();
 
-  console.log({ client: { session } });
-
   return json({ env, session }, { headers: response.headers });
 };
 
 export default function App() {
   const { env, session } = useLoaderData<typeof loader>();
   const revalidator = useRevalidator();
-
-  console.log({ server: { session } });
 
   const [supabase] = useState(() =>
     createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
