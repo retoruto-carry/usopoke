@@ -9,6 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRevalidator,
 } from "@remix-run/react";
 
 import "./tailwind.css";
@@ -78,6 +79,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
   const { env, session } = useLoaderData<typeof loader>();
+  const revalidator = useRevalidator();
 
   console.log({ server: { session } });
 
@@ -85,11 +87,19 @@ export default function App() {
     createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
   );
 
+  const serverAccessToken = session?.access_token;
+
   useEffect(() => {
-    supabase.auth
-      .getSession()
-      .then((session) => console.log({ client: { session } }));
-  }, []);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.access_token !== serverAccessToken) {
+        revalidator.revalidate();
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [revalidator, serverAccessToken, supabase.auth]);
 
 
   return <Outlet context={{ supabase }} />;
