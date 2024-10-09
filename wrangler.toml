@@ -17,7 +17,8 @@ pages_build_output_dir = "./build/client"
 # Note: Use secrets to store sensitive data.
 # - https://developers.cloudflare.com/pages/functions/bindings/#secrets
 [vars]
-MY_VARIABLE = "test_text"
+SUPABASE_URL = "https://lyfolpqxqktrbmnuhghc.supabase.co"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Zm9scHF4cWt0cmJtbnVoZ2hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgzODczODUsImV4cCI6MjA0Mzk2MzM4NX0.T7-Y6q3tBmfDWDq5scg1bMK7HA5j49tHxrPywr6YzrI"
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#workers-ai

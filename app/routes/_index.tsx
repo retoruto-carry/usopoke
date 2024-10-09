@@ -4,9 +4,9 @@ import { json, useLoaderData } from "@remix-run/react";
 import Login from "~/components/ui/login";
 import { createServerSupabase } from "~/utils/supabase.server";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   const response = new Response();
-  const supabase = createServerSupabase({ request, response });
+  const supabase = createServerSupabase({ request, response, context });
   const { data } = await supabase.from("todo_list").select();
   return json({ todo_list: data ?? [] }, { headers: response.headers });
 };

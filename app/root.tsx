@@ -16,9 +16,7 @@ import "./tailwind.css";
 import { useEffect, useState } from "react";
 import { Database } from "./types/supabase";
 import { createBrowserClient, SupabaseClient } from "@supabase/auth-helpers-remix";
-
-const SUPABASE_URL = "https://lyfolpqxqktrbmnuhghc.supabase.co"
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Zm9scHF4cWt0cmJtbnVoZ2hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgzODczODUsImV4cCI6MjA0Mzk2MzM4NX0.T7-Y6q3tBmfDWDq5scg1bMK7HA5j49tHxrPywr6YzrI"
+import { getEnv } from "./utils/getEnv.server";
 
 type TypedSupabaseClient = SupabaseClient<Database>;
 
@@ -58,15 +56,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, context }: LoaderFunctionArgs) => {
+  const { SUPABASE_URL, SUPABASE_ANON_KEY } = getEnv(context);
   const env = {
-    SUPABASE_URL: SUPABASE_URL!,
-    SUPABASE_ANON_KEY: SUPABASE_ANON_KEY!,
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY,
   };
 
   const response = new Response();
-  const supabase = createServerSupabase({ request, response });
-
+  const supabase = createServerSupabase({ request, response, context });
 
   const {
     data: { session },
@@ -86,7 +84,7 @@ export default function App() {
   const serverAccessToken = session?.access_token;
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.access_token !== serverAccessToken) {
         revalidator.revalidate();
       }
