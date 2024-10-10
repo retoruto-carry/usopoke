@@ -2,9 +2,10 @@ import { ActionFunction, json, LoaderFunctionArgs } from "@remix-run/cloudflare"
 import { useLoaderData, Form } from "@remix-run/react";
 import { useState } from "react";
 import { LastFmTrack, searchTracks } from "~/services/lastfm.server";
+import { getEnv } from "~/utils/getEnv.server";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const LAST_FM_API_KEY = "93ff4ae44a1bf8085005fde53e17b6c0"; //TODO: 環境変数にする
+export const loader = async ({ request, context }: LoaderFunctionArgs) => {
+  const LAST_FM_API_KEY = getEnv(context).LAST_FM_API_KEY;
   const url = new URL(request.url);
   const searchQuery = url.searchParams.get("q");
 
