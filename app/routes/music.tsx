@@ -23,6 +23,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   // TODO: 保存処理
+  return null
 };
 
 export default function MusicPage() {
@@ -49,7 +50,7 @@ export default function MusicPage() {
       {tracks.length > 0 && (
         <ul>
           {tracks.map((track: LastFmTrack) => (
-            <li key={track.name}>
+            <li key={track.url}>
               <p>{track.name} {track.artist}</p>
               <Form method="post">
                 <input type="hidden" name="trackName" value={track.name} />
