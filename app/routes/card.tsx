@@ -1,7 +1,9 @@
-export default function Card() {
+import { Card } from "~/components/domain/card/Card";
+
+export default function CardIndex() {
   return (
     <>
-      <h1>Card</h1>
+      <Card />
     </>
   );
 }
