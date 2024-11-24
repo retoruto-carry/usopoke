@@ -4,9 +4,10 @@ import { updateCardInteractive } from "./updateCardInteractive";
 
 type CardProps = {
   imageSrc: string;
+  width: number;
 }
 
-export const Card = ({ imageSrc }: CardProps) => {
+export const Card2 = ({ imageSrc, width }: CardProps) => {
 
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -16,7 +17,7 @@ export const Card = ({ imageSrc }: CardProps) => {
 
   return (
     <>
-      <div className="card_wrapper" ref={cardRef}>
+      <div className="card_wrapper" ref={cardRef} style={{ width: `${width}px` }}>
         <img
           src={imageSrc}
           className="card"

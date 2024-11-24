@@ -20,9 +20,11 @@
     "@remix-run/cloudflare-pages": "^2.12.0",
     "@remix-run/react": "^2.12.0",
     "@supabase/auth-helpers-remix": "^0.4.0",
+    "clsx": "^2.1.1",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241004.0",

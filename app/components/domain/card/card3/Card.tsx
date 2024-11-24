@@ -3,10 +3,11 @@ import "./card.css";
 import { updateCardInteractive } from "./updateCardInteractive";
 
 type CardProps = {
-  imageSrc: string;
+  width: number;
+  children: React.ReactNode;
 }
 
-export const Card = ({ imageSrc }: CardProps) => {
+export const Card3 = ({ width, children }: CardProps) => {
 
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -16,12 +17,10 @@ export const Card = ({ imageSrc }: CardProps) => {
 
   return (
     <>
-      <div className="card_wrapper" ref={cardRef}>
-        <img
-          src={imageSrc}
-          className="card"
-          alt="card"
-        />
+      <div className="card_wrapper" ref={cardRef} style={{ width: `${width}px`, height: `${width * 1.4}px` }}>
+        <div className="card">
+          {children}
+        </div>
         <div className="card color"></div>
         <div className="card highlight"></div>
       </div>
