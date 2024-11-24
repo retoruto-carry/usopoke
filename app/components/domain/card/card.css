@@ -67,4 +67,5 @@
   max-width: 100%;
   place-items: center;
   position: absolute;
+  transition: transform 2s ease-out, translate 2s ease-out;
 }
