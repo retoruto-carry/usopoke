@@ -68,15 +68,3 @@
   place-items: center;
   position: absolute;
 }
-
-/*真ん中に持ってきている*/
-body {
-  background-color: #212529;
-  display: grid;
-  height: calc(100vh - 32px);
-  margin: 0;
-  padding: 16px;
-  place-items: center;
-  position: relative;
-  width: calc(100% - 32px);
-}
