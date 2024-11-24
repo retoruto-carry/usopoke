@@ -26,24 +26,26 @@ const Move = ({ name, damage, info }: Move) => {
           alignItems: "center",
           gap: "1rem"
         }}>
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem"
-          }}>
-            <img src="/images/energy.png" alt="エネルギー" style={{
-              width: "1.5rem",
-              height: "1.5rem",
-              borderRadius: "50%",
-              border: "1px solid #FFF"
-            }} />
-            <img src="/images/energy.png" alt="エネルギー" style={{
-              width: "1.5rem",
-              height: "1.5rem",
-              borderRadius: "50%",
-              border: "1px solid #FFF"
-            }} />
-          </div>
+          {(damage || name || info) && (
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem"
+            }}>
+              <img src="/images/energy.png" alt="エネルギー" style={{
+                width: "1.5rem",
+                height: "1.5rem",
+                borderRadius: "50%",
+                border: "1px solid #FFF"
+              }} />
+              <img src="/images/energy.png" alt="エネルギー" style={{
+                width: "1.5rem",
+                height: "1.5rem",
+                borderRadius: "50%",
+                border: "1px solid #FFF"
+              }} />
+            </div>
+          )}
           <p style={{
             color: "#111111",
             fontSize: "1.3rem",
@@ -170,7 +172,7 @@ export const CardContent = ({ imageSrc, hp, name, moves }: CardContentProps) => 
         // backgroundColor: "rgba(0, 0, 0, 0.5)"
       }}>
         {moves.map((move) => (
-          <Move key={move.name} name={move.name} damage={move.damage} />
+          <Move key={move.name} name={move.name} damage={move.damage} info={move.info} />
         ))}
       </div>
     </div >
