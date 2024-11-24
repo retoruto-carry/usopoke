@@ -1,8 +1,12 @@
 import { useEffect, useRef } from "react";
 import "./card.css";
-import { updateCardInteractive } from "./updateCardInteractive";
+import { updateCardInteractive } from "../updateCardInteractive";
 
-export const Card = () => {
+type CardProps = {
+  imageSrc: string;
+}
+
+export const Card = ({ imageSrc }: CardProps) => {
 
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -14,7 +18,7 @@ export const Card = () => {
     <>
       <div className="card_wrapper" ref={cardRef}>
         <img
-          src="https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg"
+          src={imageSrc}
           className="card"
           alt="card"
         />

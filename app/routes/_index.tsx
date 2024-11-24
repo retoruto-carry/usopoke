@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { Form, json, useLoaderData } from "@remix-run/react";
 
-import Login from "~/components/ui/login";
+import Login from "~/components/common/login";
 import { createServerSupabase } from "~/utils/supabase.server";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
