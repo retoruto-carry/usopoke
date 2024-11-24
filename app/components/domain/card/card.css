@@ -1,0 +1,82 @@
+.card_wrapper:hover {
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  translate: calc((var(--ratiox) - 0.5) * -5%) calc((var(--ratioy) - 0.5) * -5%);
+}
+
+.card_wrapper:hover > .highlight {
+  background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.8) 10%, rgba(255,255,255,.65) 20%, rgba(0,0,0,.5) 90%);
+  mix-blend-mode: overlay;
+}
+
+.color {
+  mix-blend-mode: color-dodge;
+  display: grid;
+}
+
+.card_wrapper:hover > .color {
+  background-image:
+       url("https://drive.google.com/uc?export=view&id=1XK8UtHtR7lvjUbQtzTDnJW4-YLmjfdqb"),
+        repeating-linear-gradient( 110deg, 
+        rgba(89, 46, 80, 0.5) 0%, 
+        hsl(39, 37%, 60%) 2.5%, 
+        rgb(216, 183, 92) 5%, 
+        hsl(39, 37%, 60%) 7.5%, 
+        rgba(14, 21, 46, 0.5) 10% , 
+        rgba(14, 21, 46, 0.5) 15% 
+        ), 
+        url("https://drive.google.com/uc?export=view&id=1_6dU3wO7s2mIJqbbN3m86UNXF7YbChUa");
+  background-blend-mode: color-burn, darken;
+  background-size: 25% 25%, 600% 100%, 28% 23%;
+  background-position: center, var(--posx) var(--posy), center;
+  filter: brightness(calc((var(--hyp)*0.4) + 0.7)) contrast(3) saturate(.66);
+}
+
+.card_wrapper:hover > .color::after {
+  content: "";
+    background-size: 25% 25%, 600% 100%, 28% 23%;
+    background-position: center, calc( var(--posx) * -1 ) calc( var(--posy) * -1 ), center;
+    filter: brightness(calc((var(--hyp)*0.3) + 0.7)) contrast(2.5) saturate(.66);
+    mix-blend-mode: exclusion;
+  background-image: 
+        url("https://drive.google.com/uc?export=view&id=1XK8UtHtR7lvjUbQtzTDnJW4-YLmjfdqb"),
+        repeating-linear-gradient( 110deg, 
+        rgba(89, 46, 80, 0.5) 0%, 
+        hsl(39, 37%, 60%) 2.5%, 
+        rgb(216, 183, 92) 5%, 
+        hsl(39, 37%, 60%) 7.5%, 
+        rgba(14, 21, 46, 0.5) 10% , 
+        rgba(14, 21, 46, 0.5) 15% 
+        );
+    background-blend-mode: color-burn, darken;
+}
+
+/*形を整える*/
+.card {
+  border-radius: 4.5% / 3.5%;
+  box-shadow: 0 10px 20px -5px #000;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+}
+
+.card_wrapper {
+  aspect-ratio: .716;
+  display: grid;
+  height: calc(100% - 32px);
+  max-width: 100%;
+  place-items: center;
+  position: absolute;
+}
+
+/*真ん中に持ってきている*/
+body {
+  background-color: #212529;
+  display: grid;
+  height: calc(100vh - 32px);
+  margin: 0;
+  padding: 16px;
+  place-items: center;
+  position: relative;
+  width: calc(100% - 32px);
+}
