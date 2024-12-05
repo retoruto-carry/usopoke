@@ -22,7 +22,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   const randomId = generateRandomId();
 
   //  Supabase Storageに画像をアップロード
-  const { error: uploadError, data: imageData } = await supabase.storage
+  const { error: uploadError } = await supabase.storage
     .from("card_images")
     .upload(`${uid}/${randomId}`, imageFile, {
       cacheControl: '3600',
@@ -36,7 +36,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   }
 
   // データベースに画像のURLを保存
-  const imageUrl = imageData?.fullPath;
+  const { data: { publicUrl: imageUrl } } = await supabase.storage.from('card_images').getPublicUrl(`${uid}/${randomId}`);
   const { error: dbError } = await supabase.from("card_images").insert({
     image_url: imageUrl
   });
@@ -47,7 +47,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     return json({ error: dbError.message }, { status: 500 });
   }
 
-  // 成功時のレスポンスをリダイレクトに変更
+  // 成功時のレスポンスをリダイレクトに変更 FIXME
   return redirect('/success-page');
 }
 
