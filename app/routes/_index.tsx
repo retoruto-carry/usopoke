@@ -7,6 +7,7 @@ import { CardContent } from "~/components/domain/card_content/CardContent";
 import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
 import { createServerSupabase } from "~/utils/supabase.server";
 import { requireUser } from "~/utils/auth.server";
+import { generateRandomId } from "~/utils/generateRandomId";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const response = new Response();
@@ -18,10 +19,12 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   const user = await requireUser({ request, context });
   const uid = user.id;
 
+  const randomId = generateRandomId();
+
   //  Supabase Storageに画像をアップロード
   const { error: uploadError, data: imageData } = await supabase.storage
     .from("card_images")
-    .upload(`${uid}/${encodeURIComponent(imageFile.name)}`, imageFile, {
+    .upload(`${uid}/${randomId}`, imageFile, {
       cacheControl: '3600',
       upsert: false
     });
@@ -70,13 +73,13 @@ export default function Editor() {
     <>
       <Login />
       <Form method="post" encType="multipart/form-data">
-        <input type="file" name="image" onChange={handleImageChange} />
+        <input type="file" name="image" onChange={handleImageChange} required />
         <div className="flex flex-col gap-2 max-w-md">
-          <Input type="text" name="hp" placeholder="HP" onChange={e => setHp(e.target.value)} value={hp} />
-          <Input type="text" name="name" placeholder="名前" onChange={e => setName(e.target.value)} value={name} />
-          <Input type="text" name="move1-name" placeholder="わざ1" onChange={e => setMoves(prev => [{ ...prev[0], name: e.target.value }, prev[1]])} value={moves[0].name} />
-          <Input type="text" name="move1-damage" placeholder="ダメージ" onChange={e => setMoves(prev => [{ ...prev[0], damage: e.target.value }, prev[1]])} value={moves[0].damage} />
-          <Input type="text" name="move1-info" placeholder="説明" onChange={e => setMoves(prev => [{ ...prev[0], info: e.target.value }, prev[1]])} value={moves[0].info} />
+          <Input type="text" name="hp" placeholder="HP" onChange={e => setHp(e.target.value)} value={hp} required />
+          <Input type="text" name="name" placeholder="名前" onChange={e => setName(e.target.value)} value={name} required />
+          <Input type="text" name="move1-name" placeholder="わざ1" onChange={e => setMoves(prev => [{ ...prev[0], name: e.target.value }, prev[1]])} value={moves[0].name} required />
+          <Input type="text" name="move1-damage" placeholder="ダメージ" onChange={e => setMoves(prev => [{ ...prev[0], damage: e.target.value }, prev[1]])} value={moves[0].damage} required />
+          <Input type="text" name="move1-info" placeholder="説明" onChange={e => setMoves(prev => [{ ...prev[0], info: e.target.value }, prev[1]])} value={moves[0].info} required />
           <Input type="text" name="move2-name" placeholder="わざ2" onChange={e => setMoves(prev => [prev[0], { ...prev[1], name: e.target.value }])} value={moves[1].name} />
           <Input type="text" name="move2-damage" placeholder="ダメージ" onChange={e => setMoves(prev => [prev[0], { ...prev[1], damage: e.target.value }])} value={moves[1].damage} />
           <Input type="text" name="move2-info" placeholder="説明" onChange={e => setMoves(prev => [prev[0], { ...prev[1], info: e.target.value }])} value={moves[1].info} />
