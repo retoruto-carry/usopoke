@@ -1,48 +1,79 @@
-import { ActionFunctionArgs } from "@remix-run/cloudflare";
-import { json } from "@remix-run/node";
-import { useActionData, useNavigation, Form } from "@remix-run/react";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/cloudflare";
+import { useLoaderData, useNavigation, Form, useActionData } from "@remix-run/react";
 import { Database } from "~/types/supabase";
 import { createServerSupabase } from "~/utils/supabase.server";
 
-type ActionResponse = {
-  error?: string;
-  result?: Database["public"]["Tables"]["card_images"]["Row"];
+type LoaderData = {
+  card: Database["public"]["Tables"]["card_images"]["Row"] | null;
 };
 
-export const action = async ({ request, context }: ActionFunctionArgs) => {
+export const loader: LoaderFunction = async ({ request, context }) => {
   const response = new Response();
   const supabase = createServerSupabase({ request, response, context });
 
-  // カードリストを取得
-  const { data: cards, error } = await supabase.rpc("get_random_card");
-  if (error || !cards) {
-    return json<ActionResponse>({ error: "不明なエラーが発生しました。" }, { status: 400 });
+  const url = new URL(request.url);
+  const id = url.searchParams.get("id");
+
+  if (!id) {
+    return json<LoaderData>({ card: null });
   }
 
-  return json<ActionResponse>({ result: cards[0] });
+  const { data: card, error } = await supabase
+    .from("card_images")
+    .select()
+    .eq("id", id)
+    .single();
+
+
+  if (error || !card) {
+    throw new Error("カードが見つかりませんでした。");
+  }
+
+  return json<LoaderData>({ card });
+};
+
+type ActionResponse = {
+  error?: string;
+};
+
+export const action: ActionFunction = async ({ request, context }) => {
+  const response = new Response();
+  const supabase = createServerSupabase({ request, response, context });
+
+  // ランダムなカードを取得
+  const { data: cards, error } = await supabase.rpc("get_random_card");
+
+  if (error || !cards || cards.length === 0) {
+    throw new Error("カードを取得できませんでした。");
+  }
+
+  const selectedCard = cards[0];
+  return redirect(`/draw?id=${selectedCard.id}`);
 };
 
 export default function Index() {
-  const actionData = useActionData<typeof action>();
+  const { card } = useLoaderData<LoaderData>();
+  const actionData = useActionData<ActionResponse>();
   const navigation = useNavigation();
-  const isDrawing = navigation.state === "submitting";
+  const isSubmitting = navigation.state === "submitting";
+
+  console.log(card);
 
   return (
     <div>
       <h1>ガチャ</h1>
       <Form method="post">
-        <button type="submit" disabled={isDrawing}>
-          {isDrawing ? "引いています..." : "カードを引く"}
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "引いています..." : "カードを引く"}
         </button>
       </Form>
 
-      {isDrawing && <p>ローディング中...</p>}
+      {isSubmitting && <p>ローディング中...</p>}
 
-      {actionData?.result && (
+      {card && (
         <div>
           <h2>結果</h2>
-          <img src={actionData.result.image_url} alt="カード画像" />
-
+          <img src={card.image_url} alt="カード画像" />
           <Form method="post">
             <button type="submit">もう一度引く</button>
           </Form>
