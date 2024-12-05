@@ -32,7 +32,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_random_card: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          created_at: string
+          id: number
+          image_url: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

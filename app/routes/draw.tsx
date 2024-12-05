@@ -14,15 +14,12 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   const supabase = createServerSupabase({ request, response, context });
 
   // カードリストを取得
-  const { data: cards, error } = await supabase.from("card_images").select("*");
-  if (error || !cards || cards.length === 0) {
+  const { data: cards, error } = await supabase.rpc("get_random_card");
+  if (error || !cards) {
     return json<ActionResponse>({ error: "不明なエラーが発生しました。" }, { status: 400 });
   }
 
-  // ランダムで1枚選ぶ
-  const randomCard = cards[Math.floor(Math.random() * cards.length)];
-
-  return json<ActionResponse>({ result: randomCard });
+  return json<ActionResponse>({ result: cards[0] });
 };
 
 export default function Index() {
