@@ -1,7 +1,8 @@
-import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/cloudflare";
-import { useLoaderData, useNavigation, Form, useActionData } from "@remix-run/react";
-import { Database } from "~/types/supabase";
+import { LoaderFunction, json } from "@remix-run/cloudflare";
+import { useLoaderData, useNavigate } from "@remix-run/react";
+import { useState } from "react";
 import { createServerSupabase } from "~/utils/supabase.server";
+import type { Database } from "~/types/supabase";
 
 type LoaderData = {
   card: Database["public"]["Tables"]["card_images"]["Row"] | null;
@@ -24,7 +25,6 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     .eq("id", id)
     .single();
 
-
   if (error || !card) {
     throw new Error("カードが見つかりませんでした。");
   }
@@ -32,55 +32,72 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   return json<LoaderData>({ card });
 };
 
-type ActionResponse = {
-  error?: string;
-};
-
-export const action: ActionFunction = async ({ request, context }) => {
-  const response = new Response();
-  const supabase = createServerSupabase({ request, response, context });
-
-  // ランダムなカードを取得
-  const { data: cards, error } = await supabase.rpc("get_random_card");
-
-  if (error || !cards || cards.length === 0) {
-    throw new Error("カードを取得できませんでした。");
-  }
-
-  const selectedCard = cards[0];
-  return redirect(`/draw?id=${selectedCard.id}`);
-};
-
-export default function Index() {
+export default function Draw() {
   const { card } = useLoaderData<LoaderData>();
-  const actionData = useActionData<ActionResponse>();
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state === "submitting";
+  const [isOpened, setIsOpened] = useState(false);
+  const navigate = useNavigate();
 
-  console.log(card);
+  const handleDrawAgain = () => {
+    setIsOpened(false);
+    navigate("/draw");
+  };
 
   return (
-    <div>
-      <h1>ガチャ</h1>
-      <Form method="post">
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "引いています..." : "カードを引く"}
-        </button>
-      </Form>
+    <div className="max-w-md mx-auto p-4 min-h-screen bg-gray-50">
+      <h1 className="text-2xl text-purple-600 mb-4">うそポケ画像メーカー</h1>
 
-      {isSubmitting && <p>ローディング中...</p>}
+      <div className="bg-purple-400 p-4 text-white text-center mb-4">
+        パックの開封結果
+      </div>
 
-      {card && (
-        <div>
-          <h2>結果</h2>
-          <img src={card.image_url} alt="カード画像" />
-          <Form method="post">
-            <button type="submit">もう一度引く</button>
-          </Form>
-        </div>
-      )}
+      <div className="bg-white p-4 rounded-lg shadow-md">
+        {isOpened ? (
+          <div className="space-y-4">
+            <div className="bg-white rounded-lg shadow-sm p-4">
+              <img
+                src={card?.image_url}
+                alt="カード"
+                className="w-full rounded-lg"
+              />
+            </div>
 
-      {actionData?.error && <p style={{ color: "red" }}>{actionData.error}</p>}
+            <div className="flex justify-between items-center">
+              <button className="text-yellow-400 text-2xl">★</button>
+              <button
+                onClick={handleDrawAgain}
+                className="text-gray-400 text-2xl"
+              >
+                ↻
+              </button>
+            </div>
+
+            <button className="w-full bg-black text-white py-2 rounded-md">
+              X ポスト
+            </button>
+
+            <button className="w-full border border-gray-200 py-2 rounded-md">
+              ↓ 画像DL
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="cursor-pointer text-center"
+            onClick={() => setIsOpened(true)}
+          >
+            <img
+              src="/pack.png"
+              alt="パック"
+              className="mx-auto mb-2 w-48"
+            />
+            <p className="text-purple-600">▲ タップしてパックを開封</p>
+          </button>
+        )}
+      </div>
+
+      <div className="mt-6 bg-purple-400 p-4 text-white text-center">
+        もう一度カードを引く（ランダム）
+      </div>
     </div>
   );
 }

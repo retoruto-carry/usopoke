@@ -17,12 +17,14 @@ export const Card3 = ({ width, children }: CardProps) => {
 
   return (
     <>
-      <div className="card_wrapper" ref={cardRef} style={{ width: `${width}px`, height: `${width * 1.4}px` }}>
-        <div className="card">
-          {children}
+      <div style={{ width: `${width}px`, height: `${width * 1.4}px` }}>
+        <div className="card_wrapper" ref={cardRef} style={{ width: `${width}px`, height: `${width * 1.4}px` }}>
+          <div className="card">
+            {children}
+          </div>
+          <div className="card color"></div>
+          <div className="card highlight"></div>
         </div>
-        <div className="card color"></div>
-        <div className="card highlight"></div>
       </div>
     </>
   );
