@@ -17,22 +17,39 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   const { image } = Object.fromEntries(await formData);
   const imageFile = image as File;
   const randomId = generateRandomId();
+  const imagePath = `public/${randomId}`;
 
   //  Supabase Storageに画像をアップロード
   const { error: uploadError } = await supabase.storage
     .from("card_images")
-    .upload(`public/${randomId}`, imageFile, {
+    .upload(imagePath, imageFile, {
+      contentType: imageFile.type,
       cacheControl: '3600',
       upsert: false
     });
 
-  // アップロードラーのハンドリング
   if (uploadError) {
     console.error(uploadError);
-    return json({ error: uploadError.message }, { status: 500 });
+    return json({ error: uploadError?.message || "画像のアップロードに失敗しました。" }, { status: 500 });
   }
 
-  return redirect(`/draw?id=${randomId}`);
+  const { data: { publicUrl: imageUrl } } = await supabase.storage.from('card_images').getPublicUrl(imagePath);
+
+  // データベースに画像のURLを保存
+  const { data: card, error: dbError } = await supabase.from("card_images").insert({
+    image_url: imageUrl
+  }).select().single();
+
+  if (dbError) {
+    console.error(dbError);
+    return json({ error: dbError.message }, { status: 500 });
+  }
+
+  if (!card) {
+    return json({ error: "カードの保存に失敗しました。" }, { status: 500 });
+  }
+
+  return redirect(`/cards/${card.id}`);
 };
 
 const DEFAULT_IMAGE_SRC = "https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg"
@@ -52,6 +69,7 @@ type FormInputs = {
   };
   showInGallery: boolean;
   agreeToTerms: boolean;
+  image: File | null;
 };
 
 export default function Index() {
@@ -64,7 +82,8 @@ export default function Index() {
       move1: { name: "", damage: "", info: "" },
       move2: { name: "", damage: "", info: "" },
       showInGallery: true,
-      agreeToTerms: true
+      agreeToTerms: true,
+      image: null,
     }
   });
 
@@ -77,10 +96,6 @@ export default function Index() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
-        alert('ファイルはPNG、JPEG、またはJPG形式である必要があります。');
-        return;
-      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
@@ -109,11 +124,17 @@ export default function Index() {
           </Card3>
         </div>
 
-        <Form method="post" className="space-y-4">
-          <input type="file" name="image" onChange={handleImageChange} required accept="image/png, image/jpeg, image/jpg" />
+        <Form method="post" className="space-y-4" encType="multipart/form-data">
+          <div className="flex flex-row gap-3 items-center">
+            <h3 className="flex-shrink-0">背景画像</h3>
+            <Input type="file" {...register("image", { onChange: handleImageChange })} required accept="image/png, image/jpeg, image/jpg" className="flex-1" />
+          </div>
+
           <div className="flex flex-col gap-2 max-w-md">
-            <Input type="text" {...register("name")} placeholder="名前" required />
-            <Input type="text" {...register("hp")} placeholder="HP" required />
+            <div className="flex items-center gap-2">
+              <Input type="text" {...register("name")} placeholder="名前" required className="flex-1" />
+              <Input type="text" {...register("hp")} placeholder="HP" required className="w-24" />
+            </div>
 
             <div className="space-y-2 p-2 border border-gray-200 rounded-md">
               <div className="flex items-center gap-2">
@@ -161,20 +182,20 @@ export default function Index() {
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Checkbox
+                id="showInGallery"
                 {...register("showInGallery")}
               />
-              <span className="text-sm text-gray-700">「みんなが作ったカード」に出現させる</span>
+              <label htmlFor="showInGallery" className="text-sm text-gray-700 cursor-pointer">「みんなが作ったカード」に出現させる</label>
             </div>
 
             <div className="ml-6">
               {formValues.showInGallery && (
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 text-purple-400"
+                  <Checkbox
+                    id="agreeToTerms"
                     {...register("agreeToTerms")}
                   />
-                  <span className="text-sm text-gray-700">利用規約を守って投稿する</span>
+                  <label htmlFor="agreeToTerms" className="text-sm text-gray-700 cursor-pointer">利用規約を守って投稿する</label>
                 </div>
               )}
             </div>
