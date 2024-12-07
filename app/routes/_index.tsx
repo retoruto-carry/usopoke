@@ -9,6 +9,8 @@ import { CardContent } from "~/components/domain/card_content/CardContent";
 import { Input } from "~/components/common/Input";
 import { Button } from "~/components/common/Button";
 import { Checkbox } from "~/components/common/Checkbox";
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const response = new Response();
@@ -72,17 +74,41 @@ type FormInputs = {
   image: File | null;
 };
 
+// Zodスキーマの定義
+const formSchema = z.object({
+  name: z.string().min(1, "名前は必須です"),
+  hp: z.string().min(1, "HPは必須です"),
+  move1: z.object({
+    name: z.string().min(1, "わざの名前は必須です"),
+    damage: z.string().min(1, "ダメージは必須です"),
+    info: z.string().min(1, "説明は必須です"),
+  }),
+  move2: z.object({
+    name: z.string().optional(),
+    damage: z.string().optional(),
+    info: z.string().optional(),
+  }),
+  showInGallery: z.boolean(),
+  agreeToTerms: z.boolean(),
+  image: z.instanceof(File).optional(),
+}).refine(data => !(data.showInGallery && !data.agreeToTerms), {
+  message: "「みんなが作ったカード」に出現させる場合、利用規約に同意する必要があります。",
+  path: ["agreeToTerms"],
+});
+
 export default function Index() {
   const [preview, setPreview] = useState(DEFAULT_IMAGE_SRC);
   const [showMove2, setShowMove2] = useState(false);
-  const { register, watch, setValue } = useForm<FormInputs>({
+  const { register, watch, setValue, formState: { isValid, isSubmitting, errors } } = useForm<FormInputs>({
+    resolver: zodResolver(formSchema),
+    mode: 'onChange',
     defaultValues: {
       hp: "",
       name: "",
       move1: { name: "", damage: "", info: "" },
       move2: { name: "", damage: "", info: "" },
       showInGallery: true,
-      agreeToTerms: true,
+      agreeToTerms: false,
       image: null,
     }
   });
@@ -203,11 +229,16 @@ export default function Index() {
 
           <Button
             variant="default"
-            disabled={!formValues.agreeToTerms}
+            disabled={!isValid || isSubmitting}
             type="submit"
           >
-            完成
+            {isSubmitting ? '送信中...' : '完成'}
           </Button>
+          {Object.values(errors).map((error, index) => (
+            <p key={index} className="text-red-500 text-sm mt-2">
+              {error.message}
+            </p>
+          ))}
         </Form>
       </div>
 
