@@ -188,6 +188,7 @@ export default function Index() {
               <Checkbox
                 id="showInGallery"
                 onCheckedChange={(value) => setValue("showInGallery", !!value)}
+                checked={formValues.showInGallery}
                 {...register("showInGallery")}
               />
               <label htmlFor="showInGallery" className="text-sm text-gray-700 cursor-pointer">「みんなが作ったカード」に出現させる</label>
@@ -199,6 +200,7 @@ export default function Index() {
                   <Checkbox
                     id="agreeToTerms"
                     onCheckedChange={(value) => setValue("agreeToTerms", !!value)}
+                    checked={formValues.agreeToTerms}
                     {...register("agreeToTerms")}
                   />
                   <label htmlFor="agreeToTerms" className="text-sm text-gray-700 cursor-pointer">利用規約を守って投稿する</label>
