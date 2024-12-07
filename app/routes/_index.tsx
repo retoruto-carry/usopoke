@@ -1,12 +1,10 @@
 import { Form } from "@remix-run/react";
 import { useState } from "react";
 import { Input } from "~/components/common/input";
-import Login from "~/components/common/login";
 import { Card3 } from "~/components/domain/card/card3/Card";
 import { CardContent } from "~/components/domain/card_content/CardContent";
 import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
 import { createServerSupabase } from "~/utils/supabase.server";
-import { requireUser } from "~/utils/auth.server";
 import { generateRandomId } from "~/utils/generateRandomId";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
@@ -15,16 +13,12 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const { image } = Object.fromEntries(await formData);
   const imageFile = image as File;
-
-  const user = await requireUser({ request, context });
-  const uid = user.id;
-
   const randomId = generateRandomId();
 
   //  Supabase Storageに画像をアップロード
   const { error: uploadError } = await supabase.storage
     .from("card_images")
-    .upload(`${uid}/${randomId}`, imageFile, {
+    .upload(`public/${randomId}`, imageFile, {
       cacheControl: '3600',
       upsert: false
     });
@@ -36,7 +30,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   }
 
   // データベースに画像のURLを保存
-  const { data: { publicUrl: imageUrl } } = await supabase.storage.from('card_images').getPublicUrl(`${uid}/${randomId}`);
+  const { data: { publicUrl: imageUrl } } = await supabase.storage.from('card_images').getPublicUrl(`${randomId}`);
   const { error: dbError } = await supabase.from("card_images").insert({
     image_url: imageUrl
   });
@@ -61,6 +55,10 @@ export default function Editor() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
+        alert('ファイルはPNG、JPEG、またはJPG形式である必要があります。');
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
@@ -71,9 +69,14 @@ export default function Editor() {
 
   return (
     <>
-      <Login />
+      <div className="flex justify-center">
+        <Card3 width={400}>
+          <CardContent imageSrc={preview} hp={hp} name={name} moves={moves} />
+        </Card3>
+      </div>
+
       <Form method="post" encType="multipart/form-data">
-        <input type="file" name="image" onChange={handleImageChange} required />
+        <input type="file" name="image" onChange={handleImageChange} required accept="image/png, image/jpeg, image/jpg" />
         <div className="flex flex-col gap-2 max-w-md">
           <Input type="text" name="hp" placeholder="HP" onChange={e => setHp(e.target.value)} value={hp} required />
           <Input type="text" name="name" placeholder="名前" onChange={e => setName(e.target.value)} value={name} required />
@@ -85,14 +88,7 @@ export default function Editor() {
           <Input type="text" name="move2-info" placeholder="説明" onChange={e => setMoves(prev => [prev[0], { ...prev[1], info: e.target.value }])} value={moves[1].info} />
         </div>
 
-        <div className="flex justify-center">
-          <Card3 width={400}>
-            <CardContent imageSrc={preview} hp={hp} name={name} moves={moves} />
-          </Card3>
-        </div>
-
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md mt-10">アップロード</button>
-
       </Form>
     </>
   )
