@@ -2,6 +2,7 @@ import { LoaderFunction, json } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { createServerSupabase } from "~/utils/supabase.server";
 import type { Database } from "~/types/supabase";
+import Draw from "~/components/domain/draw";
 
 type LoaderData = {
   card: Database["public"]["Tables"]["card_images"]["Row"];
@@ -25,7 +26,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   return json<LoaderData>({ card: cards[0] });
 };
 
-export default function Draw() {
+export default function Card() {
   const { card } = useLoaderData<LoaderData>();
 
   return (
@@ -60,18 +61,7 @@ export default function Draw() {
         </div>
 
       </div>
-
-      <div className="mt-6 bg-purple-400 p-4 text-white text-center">
-        もう一度カードを引く（ランダム）
-      </div>
-      <div className="flex flex-col items-center">
-        <img
-          src="/pack.png"
-          alt="パック"
-          className="mx-auto mb-2 w-48"
-        />
-        <p className="text-purple-600">▲ タップしてパックを開封</p>
-      </div>
+      <Draw />
     </div>
   );
 }

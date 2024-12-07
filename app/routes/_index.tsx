@@ -9,8 +9,6 @@ import { CardContent } from "~/components/domain/card_content/CardContent";
 import { Input } from "~/components/common/Input";
 import { Button } from "~/components/common/Button";
 import { Checkbox } from "~/components/common/Checkbox";
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const response = new Response();
@@ -74,33 +72,10 @@ type FormInputs = {
   image: File | null;
 };
 
-// Zodスキーマの定義
-const formSchema = z.object({
-  name: z.string().min(1, "名前は必須です"),
-  hp: z.string().min(1, "HPは必須です"),
-  move1: z.object({
-    name: z.string().min(1, "わざの名前は必須です"),
-    damage: z.string().min(1, "ダメージは必須です"),
-    info: z.string().min(1, "説明は必須です"),
-  }),
-  move2: z.object({
-    name: z.string().optional(),
-    damage: z.string().optional(),
-    info: z.string().optional(),
-  }),
-  showInGallery: z.boolean(),
-  agreeToTerms: z.boolean(),
-  image: z.instanceof(File).optional(),
-}).refine(data => !(data.showInGallery && !data.agreeToTerms), {
-  message: "「みんなが作ったカード」に出現させる場合、利用規約に同意する必要があります。",
-  path: ["agreeToTerms"],
-});
-
 export default function Index() {
   const [preview, setPreview] = useState(DEFAULT_IMAGE_SRC);
   const [showMove2, setShowMove2] = useState(false);
-  const { register, watch, setValue, formState: { isValid, isSubmitting, errors } } = useForm<FormInputs>({
-    resolver: zodResolver(formSchema),
+  const { register, watch, setValue } = useForm<FormInputs>({
     mode: 'onChange',
     defaultValues: {
       hp: "",
@@ -110,10 +85,13 @@ export default function Index() {
       showInGallery: true,
       agreeToTerms: false,
       image: null,
-    }
+    },
   });
 
   const formValues = watch();
+
+  const isFormValid = formValues.showInGallery ? formValues.agreeToTerms : true;
+
   const moves = [
     { name: formValues.move1.name, damage: formValues.move1.damage, info: formValues.move1.info },
     { name: formValues.move2.name, damage: formValues.move2.damage, info: formValues.move2.info }
@@ -209,6 +187,7 @@ export default function Index() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="showInGallery"
+                onCheckedChange={(value) => setValue("showInGallery", !!value)}
                 {...register("showInGallery")}
               />
               <label htmlFor="showInGallery" className="text-sm text-gray-700 cursor-pointer">「みんなが作ったカード」に出現させる</label>
@@ -219,6 +198,7 @@ export default function Index() {
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="agreeToTerms"
+                    onCheckedChange={(value) => setValue("agreeToTerms", !!value)}
                     {...register("agreeToTerms")}
                   />
                   <label htmlFor="agreeToTerms" className="text-sm text-gray-700 cursor-pointer">利用規約を守って投稿する</label>
@@ -229,16 +209,11 @@ export default function Index() {
 
           <Button
             variant="default"
-            disabled={!isValid || isSubmitting}
+            disabled={!isFormValid}
             type="submit"
           >
-            {isSubmitting ? '送信中...' : '完成'}
+            完成
           </Button>
-          {Object.values(errors).map((error, index) => (
-            <p key={index} className="text-red-500 text-sm mt-2">
-              {error.message}
-            </p>
-          ))}
         </Form>
       </div>
 

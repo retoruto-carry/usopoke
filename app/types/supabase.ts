@@ -14,16 +14,19 @@ export type Database = {
           created_at: string
           id: number
           image_url: string
+          is_public: boolean | null
         }
         Insert: {
           created_at?: string
           id?: number
           image_url: string
+          is_public?: boolean | null
         }
         Update: {
           created_at?: string
           id?: number
           image_url?: string
+          is_public?: boolean | null
         }
         Relationships: []
       }
@@ -38,6 +41,7 @@ export type Database = {
           created_at: string
           id: number
           image_url: string
+          is_public: boolean | null
         }[]
       }
     }
