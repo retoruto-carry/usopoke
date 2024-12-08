@@ -30,6 +30,23 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   return json<LoaderData>({ card });
 };
 
+export const meta = ({ data }: { data: LoaderData }) => {
+  const card = data?.card;
+  return [
+    { title: "カードの詳細" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:site", content: "@retoruto_carry" },
+    { name: "twitter:title", content: `${card?.name}のカード｜うそポケ画像メーカー` },
+    { name: "twitter:description", content: "嘘のぽけぽけのカードを作ってあそぼう！" },
+    { name: "twitter:image", content: `/card-ogp?id=${card?.id}` },
+    { property: "og:title", content: `${card?.name}のカード｜うそポケ画像メーカー` },
+    { property: "og:description", content: "嘘のぽけぽけのカードを作ってあそぼう！" },
+    { property: "og:image", content: `/card-ogp?id=${card?.id}` },
+    { property: "og:type", content: "website" },
+  ];
+};
+
+
 export const action = async (actionFunctionArgs: ActionFunctionArgs) => {
   try {
     const card = await createCard(actionFunctionArgs);

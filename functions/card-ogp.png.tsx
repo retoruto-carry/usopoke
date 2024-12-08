@@ -23,7 +23,7 @@ export const onRequest: PagesFunction = async (context) => {
   }
 
   const { error, data } = await supabase
-    .from("card_images")
+    .from("cards")
     .select()
     .eq("id", Number(cardId))
     .single();
