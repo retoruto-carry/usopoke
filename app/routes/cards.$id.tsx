@@ -11,6 +11,7 @@ import { AppHeader } from "~/components/common/AppHeader";
 import { ShareButton } from "~/components/common/ShareButton";
 import { useConfetti } from "~/hooks/useConfetti";
 import { useState, useEffect } from "react";
+import { AppFooter } from "~/components/common/AppFooter";
 
 type LoaderData = {
   card: Database["public"]["Tables"]["cards"]["Row"];
@@ -168,6 +169,8 @@ export default function Card() {
           ↓カードをつくろう！
         </div>
         <CardForm onSubmit={handleOnSubmit} />
+
+        <AppFooter />
       </div>
     </div >
   );
