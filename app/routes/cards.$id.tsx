@@ -2,7 +2,7 @@ import { LoaderFunction, json } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
 import { createServerSupabase } from "~/utils/supabase.server";
 import type { Database } from "~/types/supabase";
-import Draw from "~/components/domain/draw";
+import Draw from "~/components/domain/draw/draw";
 import { Card3 } from "~/components/domain/card/card3/Card";
 
 type LoaderData = {
@@ -74,6 +74,7 @@ export default function Card() {
         </div>
 
       </div>
+
       <Draw />
     </div>
   );

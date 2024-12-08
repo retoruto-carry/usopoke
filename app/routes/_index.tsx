@@ -11,6 +11,7 @@ import { Button } from "~/components/common/Button";
 import { Checkbox } from "~/components/common/Checkbox";
 import html2canvas from "html2canvas";
 import { correctStyleDisplacement } from "~/utils/correctStyleDisplacement";
+import Draw from "~/components/domain/draw/draw";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const response = new Response();
@@ -140,6 +141,7 @@ export default function Index() {
   const generateCardImage = async (element: HTMLDivElement): Promise<File> => {
     correctStyleDisplacement();
     const canvas = await html2canvas(element, {
+      scale: 2,
       useCORS: true,
       allowTaint: true,
     });
@@ -203,7 +205,7 @@ export default function Index() {
   };
 
 
-  const CARD_WIDTH = 400;
+  const CARD_WIDTH = 360;
   const CARD_HEIGHT = CARD_WIDTH * 1.4;
 
   return (
@@ -227,15 +229,17 @@ export default function Index() {
         </div>
 
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <div className="card-preview mb-6">
-            <Card3 width={400}>
-              <CardContent
-                imageSrc={preview}
-                hp={formValues.hp}
-                name={formValues.name}
-                moves={moves}
-              />
-            </Card3>
+          <div className="mb-6 flex justify-center">
+            <div>
+              <Card3 width={CARD_WIDTH}>
+                <CardContent
+                  imageSrc={preview}
+                  hp={formValues.hp}
+                  name={formValues.name}
+                  moves={moves}
+                />
+              </Card3>
+            </div>
           </div>
 
 
@@ -330,9 +334,7 @@ export default function Index() {
           </Form>
         </div>
 
-        <div className="mt-6 bg-purple-400 p-4 text-white text-center">
-          みんなが作ったカードを引く（ランダム）
-        </div>
+        <Draw />
       </div>
     </div>
   );

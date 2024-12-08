@@ -20,6 +20,15 @@ export default {
         primary: "#3b82f6",
         secondary: "#64748b",
       },
+      keyframes: {
+        'scroll-infinite': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' }
+        }
+      },
+      animation: {
+        'scroll-infinite': 'scroll-infinite 3s linear infinite'
+      }
     },
   },
   plugins: [],
