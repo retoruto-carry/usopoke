@@ -1,3 +1,4 @@
+import type { MetaFunction } from "@remix-run/node";
 import { ActionFunctionArgs, LoaderFunction, json, redirect } from "@remix-run/cloudflare";
 import { useLoaderData, useSubmit, useSearchParams, useLocation } from "@remix-run/react";
 import { createServerSupabase } from "~/utils/supabase.server";
@@ -35,16 +36,20 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 
 export const meta = ({ data }: { data: LoaderData }) => {
   const card = data?.card;
+  const title = `${card?.name}のカード｜うそポケ画像メーカー`;
+  const description = "嘘のぽけぽけのカードを作ってあそぼう！";
+  const ogpImageUrl = `https://usopoke.asonde.me/card-ogp.png?id=${card?.id}`;
+
   return [
-    { title: "カードの詳細" },
+    { title },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:site", content: "@retoruto_carry" },
-    { name: "twitter:title", content: `${card?.name}のカード｜うそポケ画像メーカー` },
-    { name: "twitter:description", content: "嘘のぽけぽけのカードを作ってあそぼう！" },
-    { name: "twitter:image", content: `https://usopoke.asonde.me/card-ogp.png?id=${card?.id}` },
-    { property: "og:title", content: `${card?.name}のカード｜うそポケ画像メーカー` },
-    { property: "og:description", content: "嘘のぽけぽけのカードを作ってあそぼう！" },
-    { property: "og:image", content: `https://usopoke.asonde.me/card-ogp.png?id=${card?.id}` },
+    { name: "twitter:title", content: title },
+    { name: "twitter:description", content: description },
+    { name: "twitter:image", content: ogpImageUrl },
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { property: "og:image", content: ogpImageUrl },
     { property: "og:type", content: "website" },
   ];
 };

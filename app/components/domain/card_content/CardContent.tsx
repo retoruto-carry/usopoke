@@ -91,6 +91,7 @@ export const CardContent = ({ imageSrc, hp, name, moves }: CardContentProps) => 
       style={{
         width: "100%",
         height: "100%",
+        backgroundColor: "#FFF",
         backgroundImage: `url(${imageSrc})`,
         backgroundSize: "cover",
         backgroundPosition: "center"

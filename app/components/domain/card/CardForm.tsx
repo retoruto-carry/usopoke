@@ -1,4 +1,4 @@
-import { Form, useParams } from "@remix-run/react";
+import { Form, Link, useParams } from "@remix-run/react";
 import { useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CardContent } from "~/components/domain/card_content/CardContent";
@@ -251,7 +251,7 @@ export function CardForm({ onSubmit }: Props) {
                   checked={formValues.agreeToTerms}
                   {...register("agreeToTerms")}
                 />
-                <label htmlFor="agreeToTerms" className="text-md text-gray-700 cursor-pointer">利用規約を守って投稿する</label>
+                <label htmlFor="agreeToTerms" className="text-md text-gray-700 cursor-pointer"><Link to="/terms" className="border-b border-gray-500 border-dotted" target="_blank">利用規約</Link>を守って投稿する</label>
               </div>
             )}
           </div>
