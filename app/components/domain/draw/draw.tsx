@@ -20,7 +20,6 @@ export default function Draw({ title }: { title: string }) {
               <button key={i} onClick={handleClick} className="flex-shrink-0">
                 <img
                   src="/images/pack.gif"
-                  loading="lazy"
                   alt="パック"
                   className="w-56"
                 />
