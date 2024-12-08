@@ -271,9 +271,9 @@ export default function Index() {
                   <div className="space-y-2 p-2 border border-gray-200 rounded-md">
                     <div className="flex items-center gap-2">
                       <Input type="text" {...register("move2.name")} placeholder="わざの名前" required className="flex-1" />
-                      <Input type="text" {...register("move2.damage")} placeholder="ダメージ" required className="w-24" />
+                      <Input type="text" {...register("move2.damage")} placeholder="ダメージ" className="w-24" />
                     </div>
-                    <Input type="text" {...register("move2.info")} placeholder="説明" required />
+                    <Input type="text" {...register("move2.info")} placeholder="説明" />
                     <div className="flex justify-center items-center">
                       <Button
                         size={"sm"}

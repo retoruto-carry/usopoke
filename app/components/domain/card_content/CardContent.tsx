@@ -14,7 +14,13 @@ type CardContentProps = {
 
 const Move = ({ name, damage, info }: Move) => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.3rem"
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -123,16 +129,16 @@ export const CardContent = ({ imageSrc, hp, name, moves }: CardContentProps) => 
             <div style={{
               display: "flex",
               alignItems: "center",
-              gap: "0.4rem"
+              gap: "0.6rem"
             }}>
               <div style={{
                 display: "flex",
                 alignItems: "baseline",
-                gap: "0.1rem"
+                gap: "0.2rem"
               }}>
                 <p style={{
                   color: "#111111",
-                  fontSize: "0.5rem",
+                  fontSize: "0.8rem",
                   fontFamily: "Arial, sans-serif",
                   fontWeight: "bold",
                   textShadow: "-1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF"
@@ -161,7 +167,7 @@ export const CardContent = ({ imageSrc, hp, name, moves }: CardContentProps) => 
       </div>
       <div style={{
         position: "absolute",
-        top: "65%",
+        top: "64.5%",
         left: "10%",
         right: "10%",
         width: "80%",
@@ -171,9 +177,8 @@ export const CardContent = ({ imageSrc, hp, name, moves }: CardContentProps) => 
         gap: "1rem",
         // backgroundColor: "rgba(0, 0, 0, 0.5)"
       }}>
-        {moves.map((move) => (
-          <Move key={move.name} name={move.name} damage={move.damage} info={move.info} />
-        ))}
+        <Move key={"move-1"} name={moves[0].name} damage={moves[0].damage} info={moves[0].info} />
+        <Move key={moves[1].name} name={moves[1].name} damage={moves[1].damage} info={moves[1].info} />
       </div>
     </div >
   )
