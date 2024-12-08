@@ -202,31 +202,32 @@ export function CardForm({ onSubmit }: Props) {
           {!showMove2 && (
             <Button
               onClick={() => setShowMove2(true)}
-              variant="secondary"
+              variant="outline"
             >
-              わざを追加
+              ＋ わざを追加
             </Button>
           )}
 
           {showMove2 && (
             <div className="space-y-2 relative">
               <div className="space-y-2 p-2 border border-gray-200 rounded-md">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 relative">
                   <Input type="text" {...register("move2.name")} placeholder="わざの名前" required className="flex-1" />
                   <Input type="text" {...register("move2.damage")} placeholder="ダメージ" className="w-24" />
                 </div>
                 <Input type="text" {...register("move2.info")} placeholder="説明" />
-                <div className="flex justify-center items-center">
+                <div className="absolute -top-4 -right-4">
                   <Button
                     size={"sm"}
-                    variant="secondary"
+                    variant="outline"
+                    className="rounded-full bg-white h-7 w-7"
                     onClick={() => {
                       setShowMove2(false);
                       // わざ2のフィールドをリセット
                       setValue("move2", { name: "", damage: "", info: "" });
                     }}
                   >
-                    ✕ 削除
+                    ✕
                   </Button>
                 </div>
               </div>
@@ -262,12 +263,14 @@ export function CardForm({ onSubmit }: Props) {
 
         <Button
           variant="default"
+          size="lg"
+          className="w-full"
           disabled={!isFormValid || isLoading}
           type="submit"
         >
           {isLoading ? "作成中..." : "完成"}
         </Button>
-      </Form>
-    </div>
+      </Form >
+    </div >
   );
 }

@@ -17,7 +17,7 @@ export default {
         ],
       },
       colors: {
-        primary: "#3b82f6",
+        primary: "#A58CED",
         secondary: "#64748b",
       },
       keyframes: {
