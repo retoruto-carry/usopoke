@@ -10,6 +10,7 @@ import { Input } from "~/components/common/Input";
 import { Button } from "~/components/common/Button";
 import { Checkbox } from "~/components/common/Checkbox";
 import html2canvas from "html2canvas";
+import { correctStyleDisplacement } from "~/utils/correctStyleDisplacement";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const response = new Response();
@@ -137,6 +138,7 @@ export default function Index() {
   const captureRef = useRef<HTMLDivElement>(null);
 
   const generateCardImage = async (element: HTMLDivElement): Promise<File> => {
+    correctStyleDisplacement();
     const canvas = await html2canvas(element, {
       useCORS: true,
       allowTaint: true,
