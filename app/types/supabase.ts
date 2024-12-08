@@ -9,11 +9,11 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      card_images: {
+      cards: {
         Row: {
           created_at: string
           hp: string
-          id: number
+          id: string
           image_url: string
           move1_damage: string
           move1_info: string
@@ -27,7 +27,7 @@ export type Database = {
         Insert: {
           created_at?: string
           hp: string
-          id?: number
+          id?: string
           image_url: string
           move1_damage: string
           move1_info: string
@@ -36,12 +36,12 @@ export type Database = {
           move2_info: string
           move2_name: string
           name: string
-          show_in_gallery?: boolean
+          show_in_gallery: boolean
         }
         Update: {
           created_at?: string
           hp?: string
-          id?: number
+          id?: string
           image_url?: string
           move1_damage?: string
           move1_info?: string
@@ -64,7 +64,7 @@ export type Database = {
         Returns: {
           created_at: string
           hp: string
-          id: number
+          id: string
           image_url: string
           move1_damage: string
           move1_info: string

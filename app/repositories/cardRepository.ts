@@ -24,7 +24,7 @@ export async function uploadCardToSupabase({
   const randomId = generateRandomId();
   const imagePath = `public/${randomId}`;
 
-  // 1️⃣ 画像をSupabase Storageにアップロード
+  // 画像をSupabase Storageにアップロード
   const { error: uploadError } = await supabase.storage
     .from("card_images")
     .upload(imagePath, data.imageFile, {
@@ -38,13 +38,13 @@ export async function uploadCardToSupabase({
     throw new Error('画像のアップロードに失敗しました');
   }
 
-  // 2️⃣ 画像の公開URLを取得
+  // 画像の公開URLを取得
   const { data: { publicUrl: imageUrl } } = await supabase.storage
     .from('card_images')
     .getPublicUrl(imagePath);
 
-  // 3️⃣ データベースに画像の情報を挿入
-  const { data: card, error: dbError } = await supabase.from("card_images").insert({
+  // データベースに画像の情報を挿入
+  const { data: card, error: dbError } = await supabase.from("cards").insert({
     image_url: imageUrl,
     name: data.name,
     hp: data.hp,

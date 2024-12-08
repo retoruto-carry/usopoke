@@ -1,12 +1,14 @@
-import { LoaderFunction, json } from "@remix-run/cloudflare";
-import { Link, useLoaderData } from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunction, json, redirect } from "@remix-run/cloudflare";
+import { Link, useLoaderData, useSubmit } from "@remix-run/react";
 import { createServerSupabase } from "~/utils/supabase.server";
 import type { Database } from "~/types/supabase";
 import Draw from "~/components/domain/draw/draw";
 import { Card3 } from "~/components/domain/card/card3/Card";
+import { CardForm } from "~/components/domain/card/CardForm";
+import { createCard } from "~/services/cardService";
 
 type LoaderData = {
-  card: Database["public"]["Tables"]["card_images"]["Row"];
+  card: Database["public"]["Tables"]["cards"]["Row"];
 };
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
@@ -18,7 +20,7 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     throw json({ message: "カードIDが指定されていません。" }, { status: 400 });
   }
 
-  const { data: card, error } = await supabase.from("card_images").select().eq("id", id).single();
+  const { data: card, error } = await supabase.from("cards").select().eq("id", id).single();
 
   if (error || !card) {
     throw json({ message: "カードが見つかりませんでした。" }, { status: 404 });
@@ -27,11 +29,34 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   return json<LoaderData>({ card });
 };
 
+export const action = async (actionFunctionArgs: ActionFunctionArgs) => {
+  try {
+    const card = await createCard(actionFunctionArgs);
+    return redirect(`/cards/${card.id}`);
+  } catch (error) {
+    return json({ error: (error as Error)?.message || "保存に失敗しました。" }, { status: 500 });
+  }
+};
+
 const CARD_WIDTH = 360;
 const CARD_HEIGHT = CARD_WIDTH * 1.4;
 
 export default function Card() {
   const { card } = useLoaderData<LoaderData>();
+
+  const submit = useSubmit();
+
+  const handleOnSubmit = async (formData: FormData) => {
+    try {
+      submit(formData, {
+        method: 'post',
+        encType: 'multipart/form-data'
+      });
+    } catch (error) {
+      console.error('カード画像の生成に失敗しました:', error);
+      alert('カード画像の生成に失敗しました。');
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto p-4 min-h-screen bg-gray-50">
@@ -76,6 +101,11 @@ export default function Card() {
       </div>
 
       <Draw title="もう一度カードを引く" />
+
+      <div className="bg-purple-400 p-4 text-white text-center mb-4 mt-6">
+        カードをつくる
+      </div>
+      <CardForm onSubmit={handleOnSubmit} />
     </div>
   );
 }

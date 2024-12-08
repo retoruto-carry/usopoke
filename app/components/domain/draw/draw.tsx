@@ -8,7 +8,7 @@ export default function Draw({ title }: { title: string }) {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 min-h-screen bg-gray-50">
+    <div className="max-w-md mx-auto p-4 bg-gray-50">
       <div className="mt-6 bg-purple-400 p-4 text-white text-center">
         {title}
         <span className="text-xs">（ランダム）</span>

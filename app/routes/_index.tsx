@@ -1,46 +1,15 @@
 import { useSubmit } from "@remix-run/react";
-import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
-import { createServerSupabase } from "~/utils/supabase.server";
 import Draw from "~/components/domain/draw/draw";
-import { uploadCardToSupabase } from "~/services/supabase/cards";
 import { CardForm } from "~/components/domain/card/CardForm";
+import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
+import { createCard } from "~/services/cardService";
 
-export const action = async ({ request, context }: ActionFunctionArgs) => {
-  const response = new Response();
-  const supabase = createServerSupabase({ request, response, context });
-  const formData = await request.formData();
-  const {
-    image,
-    name,
-    hp,
-    move1_name,
-    move1_damage,
-    move1_info,
-    move2_name,
-    move2_damage,
-    move2_info,
-    show_in_gallery,
-  } = Object.fromEntries(formData);
-
+export const action = async (actionFunctionArgs: ActionFunctionArgs) => {
   try {
-    const card = await uploadCardToSupabase({
-      supabase,
-      data: {
-        imageFile: image as File,
-        name: name as string,
-        hp: hp as string,
-        move1_name: move1_name as string,
-        move1_damage: move1_damage as string,
-        move1_info: move1_info as string,
-        move2_name: move2_name as string,
-        move2_damage: move2_damage as string,
-        move2_info: move2_info as string,
-        show_in_gallery: show_in_gallery === "true"
-      }
-    });
+    const card = await createCard(actionFunctionArgs);
     return redirect(`/cards/${card.id}`);
   } catch (error) {
-    return json({ error: "画像の保存に失敗しました。" }, { status: 500 });
+    return json({ error: (error as Error)?.message || "保存に失敗しました。" }, { status: 500 });
   }
 };
 

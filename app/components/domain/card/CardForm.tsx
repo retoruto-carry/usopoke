@@ -7,6 +7,7 @@ import { Button } from "~/components/common/Button";
 import { Checkbox } from "~/components/common/Checkbox";
 import html2canvas from "html2canvas";
 import { correctStyleDisplacement } from "~/utils/correctStyleDisplacement";
+import { Card3 } from "./card3/Card";
 
 const DEFAULT_IMAGE_SRC = "https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg"
 const CARD_WIDTH = 360;
@@ -37,6 +38,7 @@ type Props = {
 export function CardForm({ onSubmit }: Props) {
   const [preview, setPreview] = useState(DEFAULT_IMAGE_SRC);
   const [showMove2, setShowMove2] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { register, watch, setValue } = useForm<FormInputs>({
     mode: 'onChange',
     defaultValues: {
@@ -113,7 +115,7 @@ export function CardForm({ onSubmit }: Props) {
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setIsLoading(true);
     const captureElement = captureRef.current;
     if (!captureElement) return;
 
@@ -131,12 +133,13 @@ export function CardForm({ onSubmit }: Props) {
       onSubmit(formData);
     } catch (error) {
       console.error('カード画像の生成に失敗しました:', error);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="relative">
-      <div className="absolute bottom-0 left-0 -translate-x-full" ref={captureRef}>
+      <div className="fixed bottom-0 left-0 -translate-x-full" ref={captureRef}>
         <div className="screen-shot" style={{ width: `${CARD_WIDTH}px`, height: `${CARD_HEIGHT}px` }}>
           <CardContent
             imageSrc={preview}
@@ -146,7 +149,19 @@ export function CardForm({ onSubmit }: Props) {
           />
         </div>
       </div>
-      <Form className="space-y-4" onSubmit={onSubmitHandler}>
+      <div className="flex justify-center items-center mb-5">
+        <div className="screen-shot" style={{ width: `${CARD_WIDTH}px`, height: `${CARD_HEIGHT}px` }}>
+          <Card3 width={CARD_WIDTH}>
+            <CardContent
+              imageSrc={preview}
+              hp={formValues.hp}
+              name={formValues.name}
+              moves={moves}
+            />
+          </Card3>
+        </div>
+      </div>
+      <Form className="space-y-4 mt-8" onSubmit={onSubmitHandler}>
         <div className="flex flex-row gap-3 items-center">
           <h3 className="flex-shrink-0">背景画像</h3>
           <Input type="file" {...register("image", { onChange: handleImageChange })} required accept="image/png, image/jpeg, image/jpg" className="flex-1" />
@@ -229,10 +244,10 @@ export function CardForm({ onSubmit }: Props) {
 
         <Button
           variant="default"
-          disabled={!isFormValid}
+          disabled={!isFormValid || isLoading}
           type="submit"
         >
-          完成
+          {isLoading ? "作成中..." : "完成"}
         </Button>
       </Form>
     </div>
