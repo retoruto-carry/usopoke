@@ -80,15 +80,15 @@ export default function Card() {
   const shareText = `「${card.name}」のカードを${afterCreated ? '作りました' : '引き当てました'}\n\n#うそポケ画像メーカー\nhttps://usopoke.asonde.me/cards/${card.id}`;
 
   return (
-    <div className="max-w-md mx-auto p-4 min-h-screen bg-gray-50">
-      <AppHeader />
-      <div className="bg-purple-400 p-4 text-white text-center mb-4">
-        {afterCreated ? 'カードが完成しました' : 'パックの開封結果'}
-      </div>
+    <div className="bg-primary relative">
+      <div className="max-w-md mx-auto p-4 min-h-screen">
+        <AppHeader />
+        <div className="bg-white text-primary p-4 text-center font-bold mb-4 text-lg">
+          {afterCreated ? 'カードが完成しました' : 'パックの開封結果'}
+        </div>
 
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <div className="space-y-4 w-full">
-          <div className="bg-white rounded-lg shadow-sm p-4 flex justify-center">
+        <div className="bg-primary p-4">
+          <div className="space-y-4 w-full">
             <div>
               <Card3 width={CARD_WIDTH}>
                 <img
@@ -101,38 +101,48 @@ export default function Card() {
                 />
               </Card3>
             </div>
+
+            <div className="h-5" />
+
+            <div className="bg-white p-4 ">
+              <ShareButton imageUrl={card.image_url} text={shareText} />
+
+              <div className="h-5" />
+
+              <a
+                href={card.image_url}
+                target="_blank"
+                rel="noreferrer"
+                download={`${card.name}.png`}
+                className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 py-2 rounded-md flex items-center justify-center gap-2 font-medium"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                画像をダウンロード
+              </a>
+              <div className="text-center text-xs text-gray-500 leading-relaxed mt-2">
+                ダウンロードボタンをタップして出てきた画像を<br />
+                長押しまたは右クリックで保存してください。
+              </div>
+            </div>
           </div>
 
-          <ShareButton imageUrl={card.image_url} text={shareText} />
-
-          <a
-            href={card.image_url}
-            target="_blank"
-            rel="noreferrer"
-            download={`${card.name}.png`}
-            className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 py-2 rounded-md flex items-center justify-center gap-2 font-medium"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            画像をダウンロード
-          </a>
-          <div className="text-center text-xs text-gray-500 leading-relaxed">
-            ダウンロードボタンをタップして出てきた画像を<br />
-            長押しまたは右クリックで保存してください。
-          </div>
         </div>
 
-      </div>
+        <div className="h-4" />
 
-      <Draw title="もう一度カードを引く" />
+        <Draw title="もう一度カードを引く" />
 
-      <div className="bg-purple-400 p-4 text-white text-center mb-4 mt-6">
-        カードをつくる
+        <div className="h-8" />
+
+        <div className="p-4 text-white text-center mb-4 font-bold text-xl">
+          ↓カードをつくろう！
+        </div>
+        <CardForm onSubmit={handleOnSubmit} />
       </div>
-      <CardForm onSubmit={handleOnSubmit} />
     </div >
   );
 }

@@ -30,14 +30,17 @@ export default function Index() {
   };
 
   return (
-    <div>
-      <div className="max-w-md mx-auto p-4 min-h-screen bg-gray-50 relative">
+    <div className="bg-primary relative">
+      <div className="max-w-md mx-auto p-4 min-h-screen">
         <AppHeader />
 
-        <div className="bg-purple-400 p-4 text-white text-center mb-4">
-          カードをつくる
+        <div className="p-4 text-white text-center mb-4 font-bold text-2xl">
+          ↓カードをつくろう！
         </div>
+
         <CardForm onSubmit={handleOnSubmit} />
+
+        <div className="h-12" />
 
         <Draw title="みんなが作ったカードを引く" />
       </div>

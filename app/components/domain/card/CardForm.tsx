@@ -85,8 +85,6 @@ export function CardForm({ onSubmit }: Props) {
 
     if (!captureRef.current) throw new Error("captureRef.current is null");
 
-    console.log("aaaaaaaaaaa");
-
     const canvas = await html2canvas(captureRef.current, {
       useCORS: true,
       removeContainer: true,
@@ -98,8 +96,6 @@ export function CardForm({ onSubmit }: Props) {
       scrollY: 0,
       scale: 1,
     })
-
-    console.log("bbbbbbbbbbbb");
 
     removeStyle();
 
@@ -157,7 +153,7 @@ export function CardForm({ onSubmit }: Props) {
 
   return (
     <div className="relative">
-      <div className="fixed bottom-0 left-0 -translate-x-full" ref={captureRef}>
+      <div className="fixed bottom-0 left-0 -translate-x-full bg-whte" ref={captureRef}>
         <div className="screen-shot" style={{ width: `${CARD_WIDTH}px`, height: `${CARD_HEIGHT}px` }}>
           <CardContent
             imageSrc={preview}
@@ -179,19 +175,19 @@ export function CardForm({ onSubmit }: Props) {
           </Card3>
         </div>
       </div>
-      <Form className="space-y-4 mt-8" onSubmit={onSubmitHandler}>
+      <Form className="space-y-4 mt-8 bg-white p-4 " onSubmit={onSubmitHandler}>
         <div className="flex flex-row gap-3 items-center">
-          <h3 className="flex-shrink-0">背景画像</h3>
+          <h3 className="flex-shrink-0 font-medium">画像</h3>
           <Input type="file" {...register("image", { onChange: handleImageChange })} required accept="image/png, image/jpeg, image/jpg" className="flex-1" />
         </div>
 
-        <div className="flex flex-col gap-2 max-w-md">
+        <div className="flex flex-col gap-5 max-w-md">
           <div className="flex items-center gap-2">
             <Input type="text" {...register("name")} placeholder="名前" required className="flex-1" />
             <Input type="text" {...register("hp")} placeholder="HP" required className="w-24" />
           </div>
 
-          <div className="space-y-2 p-2 border border-gray-200 rounded-md">
+          <div className="space-y-2 p-2 border border-gray-200 ">
             <div className="flex items-center gap-2">
               <Input type="text" {...register("move1.name")} placeholder="わざの名前" required className="flex-1" />
               <Input type="text" {...register("move1.damage")} placeholder="ダメージ" required className="w-24" />
@@ -216,11 +212,11 @@ export function CardForm({ onSubmit }: Props) {
                   <Input type="text" {...register("move2.damage")} placeholder="ダメージ" className="w-24" />
                 </div>
                 <Input type="text" {...register("move2.info")} placeholder="説明" />
-                <div className="absolute -top-4 -right-4">
+                <div className="absolute -top-5 -right-4">
                   <Button
                     size={"sm"}
                     variant="outline"
-                    className="rounded-full bg-white h-7 w-7"
+                    className="bg-white h-7 w-7"
                     onClick={() => {
                       setShowMove2(false);
                       // わざ2のフィールドをリセット
