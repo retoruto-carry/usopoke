@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, LoaderFunction, json, redirect } from "@remix-run/cloudflare";
-import { useLoaderData, useSubmit, useSearchParams } from "@remix-run/react";
+import { useLoaderData, useSubmit, useSearchParams, useLocation } from "@remix-run/react";
 import { createServerSupabase } from "~/utils/supabase.server";
 import type { Database } from "~/types/supabase";
 import Draw from "~/components/domain/draw/draw";
@@ -66,10 +66,11 @@ export default function Card() {
   const submit = useSubmit();
   const [searchParams] = useSearchParams();
   const afterCreated = searchParams.get('created');
+  const location = useLocation();
 
   const { elementIdLeft, elementIdRight } = useConfetti({
     triggerOnMount: true,
-    triggerCondition: true,
+    triggerCondition: !!location.key,
     lifetime: 2000,
     startVelocity: 45,
   });
