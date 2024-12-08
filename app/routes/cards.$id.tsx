@@ -9,6 +9,7 @@ import { createCard } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
 import { ShareButton } from "~/components/common/ShareButton";
 import { useConfetti } from "~/hooks/useConfetti";
+import { useState, useEffect } from "react";
 
 type LoaderData = {
   card: Database["public"]["Tables"]["cards"]["Row"];
@@ -58,8 +59,9 @@ export const action = async (actionFunctionArgs: ActionFunctionArgs) => {
   }
 };
 
-const CARD_WIDTH = 360;
-const CARD_HEIGHT = CARD_WIDTH * 1.4;
+const CARD_WIDTH = 320;
+const MOBILE_CARD_WIDTH = 320;
+const MD_BREAKPOINT = 448;
 
 export default function Card() {
   const { card } = useLoaderData<LoaderData>();
@@ -67,6 +69,13 @@ export default function Card() {
   const [searchParams] = useSearchParams();
   const afterCreated = searchParams.get('created');
   const location = useLocation();
+  const [cardWidth, setCardWidth] = useState(CARD_WIDTH);
+
+  useEffect(() => {
+    if (window.innerWidth < MD_BREAKPOINT) {
+      setCardWidth(MOBILE_CARD_WIDTH);
+    }
+  }, []);
 
   const { elementIdLeft, elementIdRight } = useConfetti({
     triggerOnMount: true,
@@ -102,15 +111,14 @@ export default function Card() {
 
         <div className="bg-primary p-4">
           <div className="space-y-4 w-full">
-            <div>
-              <Card3 width={CARD_WIDTH}>
+            <div className="w-full flex justify-center">
+              <Card3 width={cardWidth}>
                 <img
-                  width={CARD_WIDTH}
-                  height={CARD_HEIGHT}
+                  width={cardWidth}
+                  height={cardWidth * 1.4}
                   src={card.image_url}
                   alt="カード"
                   className="w-full rounded-lg"
-                  loading="lazy"
                 />
               </Card3>
             </div>
