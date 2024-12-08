@@ -8,6 +8,8 @@ import { CardForm } from "~/components/domain/card/CardForm";
 import { createCard } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
 import { ShareButton } from "~/components/common/ShareButton";
+import { useConfetti } from "~/hooks/useConfetti";
+
 type LoaderData = {
   card: Database["public"]["Tables"]["cards"]["Row"];
 };
@@ -62,6 +64,17 @@ const CARD_HEIGHT = CARD_WIDTH * 1.4;
 export default function Card() {
   const { card } = useLoaderData<LoaderData>();
   const submit = useSubmit();
+  const [searchParams] = useSearchParams();
+  const afterCreated = searchParams.get('created');
+
+  const { elementIdLeft, elementIdRight } = useConfetti({
+    triggerOnMount: true,
+    triggerCondition: true,
+    lifetime: 2000,
+    startVelocity: 45,
+  });
+
+  const shareText = `「${card.name}」のカードを${afterCreated ? '作りました' : '引き当てました'}\n\n#うそポケ画像メーカー\nhttps://usopoke.asonde.me/cards/${card.id}`;
 
   const handleOnSubmit = async (formData: FormData) => {
     try {
@@ -75,12 +88,11 @@ export default function Card() {
     }
   };
 
-  const [searchParams] = useSearchParams();
-  const afterCreated = searchParams.get('created');
-  const shareText = `「${card.name}」のカードを${afterCreated ? '作りました' : '引き当てました'}\n\n#うそポケ画像メーカー\nhttps://usopoke.asonde.me/cards/${card.id}`;
-
   return (
     <div className="bg-primary relative">
+      <span id={elementIdLeft} className="fixed bottom-20 left-10 z-[9999]" />
+      <span id={elementIdRight} className="fixed bottom-20 right-10 z-[9999]" />
+
       <div className="max-w-md mx-auto p-4 min-h-screen">
         <AppHeader />
         <div className="bg-white text-primary p-4 text-center font-bold mb-4 text-lg">

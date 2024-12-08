@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import { LoaderFunctionArgs, json, ActionFunctionArgs, redirect } from "@remix-run/cloudflare";
 import { createServerSupabase } from "~/utils/supabase.server";
 import { useEffect } from "react";
 import { useNavigate, useLoaderData } from "@remix-run/react";
@@ -17,6 +17,18 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
   }
 
   return json({ card: cards[0] });
+};
+
+export const action = async ({ request, context }: ActionFunctionArgs) => {
+  const response = new Response();
+  const supabase = createServerSupabase({ request, response, context });
+
+  const { data: cards, error } = await supabase.rpc("get_random_card");
+  if (error || !cards || !cards[0]) {
+    throw json({ message: "カードの取得に失敗しました。" }, { status: 500 });
+  }
+
+  return redirect(`/cards/${cards[0].id}?from=draw`);
 };
 
 export default function Draw() {
