@@ -50,7 +50,7 @@ export const meta = ({ data }: { data: LoaderData }) => {
 export const action = async (actionFunctionArgs: ActionFunctionArgs) => {
   try {
     const card = await createCard(actionFunctionArgs);
-    return redirect(`/cards/${card.id}`);
+    return redirect(`/cards/${card.id}?created=true`);
   } catch (error) {
     return json({ error: (error as Error)?.message || "保存に失敗しました。" }, { status: 500 });
   }
@@ -120,8 +120,8 @@ export default function Card() {
             画像をダウンロード
           </a>
           <div className="text-center text-xs text-gray-500 leading-relaxed">
-            スマホの場合は、ダウンロードボタンをタップして、<br />
-            出てきた画像を長押しで保存してください。
+            ダウンロードボタンをタップして出てきた画像を<br />
+            長押しまたは右クリックで保存してください。
           </div>
         </div>
 

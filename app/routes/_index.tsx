@@ -8,7 +8,7 @@ import { AppHeader } from "~/components/common/AppHeader";
 export const action = async (actionFunctionArgs: ActionFunctionArgs) => {
   try {
     const card = await createCard(actionFunctionArgs);
-    return redirect(`/cards/${card.id}`);
+    return redirect(`/cards/${card.id}?created=true`);
   } catch (error) {
     return json({ error: (error as Error)?.message || "保存に失敗しました。" }, { status: 500 });
   }
