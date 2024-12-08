@@ -1,5 +1,5 @@
-import { Form } from "@remix-run/react";
-import { useRef, useState } from "react";
+import { Form, useParams } from "@remix-run/react";
+import { useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CardContent } from "~/components/domain/card_content/CardContent";
 import { Input } from "~/components/common/Input";
@@ -36,10 +36,11 @@ type Props = {
 };
 
 export function CardForm({ onSubmit }: Props) {
+  const params = useParams();
   const [preview, setPreview] = useState(DEFAULT_IMAGE_SRC);
   const [showMove2, setShowMove2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { register, watch, setValue } = useForm<FormInputs>({
+  const { register, watch, setValue, reset } = useForm<FormInputs>({
     mode: 'onChange',
     defaultValues: {
       hp: "",
@@ -51,6 +52,12 @@ export function CardForm({ onSubmit }: Props) {
       image: null,
     },
   });
+
+  useEffect(() => {
+    reset();
+    setPreview(DEFAULT_IMAGE_SRC);
+    setShowMove2(false);
+  }, [params.id, reset]);
 
   const formValues = watch();
 
