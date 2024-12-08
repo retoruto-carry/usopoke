@@ -38,10 +38,10 @@ export const meta = ({ data }: { data: LoaderData }) => {
     { name: "twitter:site", content: "@retoruto_carry" },
     { name: "twitter:title", content: `${card?.name}のカード｜うそポケ画像メーカー` },
     { name: "twitter:description", content: "嘘のぽけぽけのカードを作ってあそぼう！" },
-    { name: "twitter:image", content: `/card-ogp.png?id=${card?.id}` },
+    { name: "twitter:image", content: `https://usopoke.asonde.me/card-ogp.png?id=${card?.id}` },
     { property: "og:title", content: `${card?.name}のカード｜うそポケ画像メーカー` },
     { property: "og:description", content: "嘘のぽけぽけのカードを作ってあそぼう！" },
-    { property: "og:image", content: `/card-ogp.png?id=${card?.id}` },
+    { property: "og:image", content: `https://usopoke.asonde.me/card-ogp.png?id=${card?.id}` },
     { property: "og:type", content: "website" },
   ];
 };
@@ -77,7 +77,7 @@ export default function Card() {
 
   const [searchParams] = useSearchParams();
   const afterCreated = searchParams.get('created');
-  const shareText = `「${card.name}」のカードを${afterCreated ? '作りました' : '引き当てました'}｜#うそポケ画像メーカー\n\nhttps://usopoke.asonde.me/cards/${card.id}`;
+  const shareText = `「${card.name}」のカードを${afterCreated ? '作りました' : '引き当てました'}\n\n#うそポケ画像メーカー\nhttps://usopoke.asonde.me/cards/${card.id}`;
 
   return (
     <div className="max-w-md mx-auto p-4 min-h-screen bg-gray-50">
