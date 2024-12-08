@@ -12,21 +12,45 @@ export type Database = {
       card_images: {
         Row: {
           created_at: string
+          hp: string
           id: number
           image_url: string
-          is_public: boolean | null
+          move1_damage: string
+          move1_info: string
+          move1_name: string
+          move2_damage: string
+          move2_info: string
+          move2_name: string
+          name: string
+          show_in_gallery: boolean
         }
         Insert: {
           created_at?: string
+          hp: string
           id?: number
           image_url: string
-          is_public?: boolean | null
+          move1_damage: string
+          move1_info: string
+          move1_name: string
+          move2_damage: string
+          move2_info: string
+          move2_name: string
+          name: string
+          show_in_gallery?: boolean
         }
         Update: {
           created_at?: string
+          hp?: string
           id?: number
           image_url?: string
-          is_public?: boolean | null
+          move1_damage?: string
+          move1_info?: string
+          move1_name?: string
+          move2_damage?: string
+          move2_info?: string
+          move2_name?: string
+          name?: string
+          show_in_gallery?: boolean
         }
         Relationships: []
       }
@@ -39,9 +63,17 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: {
           created_at: string
+          hp: string
           id: number
           image_url: string
-          is_public: boolean | null
+          move1_damage: string
+          move1_info: string
+          move1_name: string
+          move2_damage: string
+          move2_info: string
+          move2_name: string
+          name: string
+          show_in_gallery: boolean
         }[]
       }
     }

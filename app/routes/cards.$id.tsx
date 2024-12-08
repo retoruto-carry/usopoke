@@ -17,13 +17,13 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     throw json({ message: "カードIDが指定されていません。" }, { status: 400 });
   }
 
-  const { data: cards, error } = await supabase.rpc("get_random_card");
+  const { data: card, error } = await supabase.from("card_images").select().eq("id", id).single();
 
-  if (error || !cards || cards.length === 0) {
+  if (error || !card) {
     throw json({ message: "カードが見つかりませんでした。" }, { status: 404 });
   }
 
-  return json<LoaderData>({ card: cards[0] });
+  return json<LoaderData>({ card });
 };
 
 export default function Card() {
@@ -44,6 +44,7 @@ export default function Card() {
               src={card.image_url}
               alt="カード"
               className="w-full rounded-lg"
+              loading="lazy"
             />
           </div>
 
