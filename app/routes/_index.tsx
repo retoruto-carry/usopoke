@@ -334,7 +334,7 @@ export default function Index() {
           </Form>
         </div>
 
-        <Draw />
+        <Draw title="みんなが作ったカードを引く" />
       </div>
     </div>
   );

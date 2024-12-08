@@ -75,7 +75,7 @@ export default function Card() {
 
       </div>
 
-      <Draw />
+      <Draw title="もう一度カードを引く" />
     </div>
   );
 }

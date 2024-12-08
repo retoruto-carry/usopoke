@@ -1,6 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 
-export default function Draw() {
+export default function Draw({ title }: { title: string }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -10,7 +10,8 @@ export default function Draw() {
   return (
     <div className="max-w-md mx-auto p-4 min-h-screen bg-gray-50">
       <div className="mt-6 bg-purple-400 p-4 text-white text-center">
-        もう一度カードを引く（ランダム）
+        {title}
+        <span className="text-xs">（ランダム）</span>
       </div>
       <div className="flex flex-col items-center bg-slate-100 pt-2 pb-6">
         <div className="relative w-full overflow-hidden mt-4">
@@ -27,7 +28,7 @@ export default function Draw() {
             ))}
           </div>
         </div>
-        <p className="text-purple-600 mt-1">▲ タップしてパックを開封</p>
+        <p className="text-purple-600 mt-5">▲ タップしてパックを開封</p>
       </div>
     </div>
   );
