@@ -24,6 +24,7 @@
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.0",
+    "@react-spring/web": "^9.7.5",
     "@remix-run/cloudflare": "^2.12.0",
     "@remix-run/cloudflare-pages": "^2.12.0",
     "@remix-run/react": "^2.12.0",
