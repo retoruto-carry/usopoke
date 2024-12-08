@@ -3,6 +3,7 @@ import Draw from "~/components/domain/draw/draw";
 import { CardForm } from "~/components/domain/card/CardForm";
 import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
 import { createCard } from "~/services/cardService";
+import { AppHeader } from "~/components/common/AppHeader";
 
 export const action = async (actionFunctionArgs: ActionFunctionArgs) => {
   try {
@@ -31,8 +32,7 @@ export default function Index() {
   return (
     <div>
       <div className="max-w-md mx-auto p-4 min-h-screen bg-gray-50 relative">
-
-        <h1 className="text-2xl text-purple-600 mb-4">うそポケ画像メーカー</h1>
+        <AppHeader />
 
         <div className="bg-purple-400 p-4 text-white text-center mb-4">
           カードをつくる

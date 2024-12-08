@@ -1,11 +1,12 @@
 import { ActionFunctionArgs, LoaderFunction, json, redirect } from "@remix-run/cloudflare";
-import { Link, useLoaderData, useSubmit } from "@remix-run/react";
+import { useLoaderData, useSubmit } from "@remix-run/react";
 import { createServerSupabase } from "~/utils/supabase.server";
 import type { Database } from "~/types/supabase";
 import Draw from "~/components/domain/draw/draw";
 import { Card3 } from "~/components/domain/card/card3/Card";
 import { CardForm } from "~/components/domain/card/CardForm";
 import { createCard } from "~/services/cardService";
+import { AppHeader } from "~/components/common/AppHeader";
 
 type LoaderData = {
   card: Database["public"]["Tables"]["cards"]["Row"];
@@ -60,10 +61,7 @@ export default function Card() {
 
   return (
     <div className="max-w-md mx-auto p-4 min-h-screen bg-gray-50">
-      <Link to="/">
-        <h1 className="text-2xl text-purple-600 mb-4">うそポケ画像メーカー</h1>
-      </Link>
-
+      <AppHeader />
       <div className="bg-purple-400 p-4 text-white text-center mb-4">
         パックの開封結果
       </div>
