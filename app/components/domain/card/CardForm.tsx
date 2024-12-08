@@ -73,13 +73,28 @@ export function CardForm({ onSubmit }: Props) {
   };
   const captureRef = useRef<HTMLDivElement>(null);
 
-  const generateCardImage = async (element: HTMLDivElement): Promise<File> => {
-    correctStyleDisplacement();
-    const canvas = await html2canvas(element, {
-      scale: 2,
+  const generateCardImage = async (captureRef: React.RefObject<HTMLDivElement>): Promise<File> => {
+    const removeStyle = correctStyleDisplacement();
+
+    if (!captureRef.current) throw new Error("captureRef.current is null");
+
+    console.log("aaaaaaaaaaa");
+
+    const canvas = await html2canvas(captureRef.current, {
       useCORS: true,
-      allowTaint: true,
-    });
+      removeContainer: true,
+      x: 0,
+      y: 0,
+      width: CARD_WIDTH,
+      height: CARD_HEIGHT,
+      scrollX: 0,
+      scrollY: 0,
+      scale: 1,
+    })
+
+    console.log("bbbbbbbbbbbb");
+
+    removeStyle();
 
     return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
@@ -116,13 +131,9 @@ export function CardForm({ onSubmit }: Props) {
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    const captureElement = captureRef.current;
-    if (!captureElement) return;
-
-    console.log(captureElement);
 
     try {
-      const imageFile = await generateCardImage(captureElement);
+      const imageFile = await generateCardImage(captureRef);
       console.log('生成されたファイル:', {
         size: imageFile.size,
         type: imageFile.type,
@@ -224,7 +235,7 @@ export function CardForm({ onSubmit }: Props) {
               checked={formValues.showInGallery}
               {...register("showInGallery")}
             />
-            <label htmlFor="showInGallery" className="text-sm text-gray-700 cursor-pointer">「みんなが作ったカード」に出現させる</label>
+            <label htmlFor="showInGallery" className="text-md text-gray-700 cursor-pointer">「みんなが作ったカード」に出現させる</label>
           </div>
 
           <div className="ml-6">
@@ -236,7 +247,7 @@ export function CardForm({ onSubmit }: Props) {
                   checked={formValues.agreeToTerms}
                   {...register("agreeToTerms")}
                 />
-                <label htmlFor="agreeToTerms" className="text-sm text-gray-700 cursor-pointer">利用規約を守って投稿する</label>
+                <label htmlFor="agreeToTerms" className="text-md text-gray-700 cursor-pointer">利用規約を守って投稿する</label>
               </div>
             )}
           </div>

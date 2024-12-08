@@ -25,7 +25,7 @@ export const onRequest: PagesFunction = async (context) => {
   const { error, data } = await supabase
     .from("cards")
     .select()
-    .eq("id", Number(cardId))
+    .eq("id", cardId)
     .single();
 
   if (error || !data) {
@@ -41,6 +41,9 @@ export const onRequest: PagesFunction = async (context) => {
     {
       width: 1200,
       height: 630,
+      headers: {
+        'content-type': 'image/png',
+      },
     }
   );
 };

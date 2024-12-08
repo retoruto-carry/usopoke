@@ -38,10 +38,10 @@ export const meta = ({ data }: { data: LoaderData }) => {
     { name: "twitter:site", content: "@retoruto_carry" },
     { name: "twitter:title", content: `${card?.name}のカード｜うそポケ画像メーカー` },
     { name: "twitter:description", content: "嘘のぽけぽけのカードを作ってあそぼう！" },
-    { name: "twitter:image", content: `/card-ogp?id=${card?.id}` },
+    { name: "twitter:image", content: `/card-ogp.png?id=${card?.id}` },
     { property: "og:title", content: `${card?.name}のカード｜うそポケ画像メーカー` },
     { property: "og:description", content: "嘘のぽけぽけのカードを作ってあそぼう！" },
-    { property: "og:image", content: `/card-ogp?id=${card?.id}` },
+    { property: "og:image", content: `/card-ogp.png?id=${card?.id}` },
     { property: "og:type", content: "website" },
   ];
 };
