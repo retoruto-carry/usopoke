@@ -27,7 +27,6 @@ type FormInputs = {
     info: string;
   };
   showInGallery: boolean;
-  agreeToTerms: boolean;
   image: File | null;
 };
 
@@ -48,7 +47,6 @@ export function CardForm({ onSubmit }: Props) {
       move1: { name: "", damage: "", info: "" },
       move2: { name: "", damage: "", info: "" },
       showInGallery: true,
-      agreeToTerms: false,
       image: null,
     },
   });
@@ -60,8 +58,6 @@ export function CardForm({ onSubmit }: Props) {
   }, [params.id, reset]);
 
   const formValues = watch();
-
-  const isFormValid = formValues.showInGallery ? formValues.agreeToTerms : true;
 
   const moves = [
     { name: formValues.move1.name, damage: formValues.move1.damage, info: formValues.move1.info },
@@ -231,41 +227,36 @@ export function CardForm({ onSubmit }: Props) {
           )}
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="showInGallery"
-              onCheckedChange={(value) => setValue("showInGallery", !!value)}
-              checked={formValues.showInGallery}
-              {...register("showInGallery")}
-            />
-            <label htmlFor="showInGallery" className="text-md text-gray-700 cursor-pointer">「みんなが作ったカード」に出現させる</label>
-          </div>
-
-          <div className="ml-6">
-            {formValues.showInGallery && (
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="agreeToTerms"
-                  onCheckedChange={(value) => setValue("agreeToTerms", !!value)}
-                  checked={formValues.agreeToTerms}
-                  {...register("agreeToTerms")}
-                />
-                <label htmlFor="agreeToTerms" className="text-md text-gray-700 cursor-pointer"><Link to="/terms" className="border-b border-gray-500 border-dotted" target="_blank">利用規約</Link>を守って投稿する</label>
-              </div>
-            )}
+        <div className="items-top flex space-x-2 pt-4">
+          <Checkbox
+            id="showInGallery"
+            onCheckedChange={(value) => setValue("showInGallery", !!value)}
+            checked={formValues.showInGallery}
+            {...register("showInGallery")}
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label htmlFor="showInGallery" className="text-md text-gray-700 cursor-pointer">ランダムパックに投稿する</label>
+            <p className="text-sm text-gray-500">
+              「みんなが作ったカード」から出るようになります
+            </p>
           </div>
         </div>
 
-        <Button
-          variant="default"
-          size="lg"
-          className="w-full"
-          disabled={!isFormValid || isLoading}
-          type="submit"
-        >
-          {isLoading ? "作成中..." : "完成"}
-        </Button>
+        <div className="space-y-2">
+          <Button
+            variant="default"
+            size="lg"
+            className="w-full"
+            disabled={isLoading}
+            type="submit"
+          >
+            {isLoading ? "作成中..." : "完成"}
+          </Button>
+
+          <p className="text-md text-gray-500">
+            ※ <Link to="/terms" className="border-b border-gray-500 border-dotted" target="_blank">利用規約</Link>に同意したとみなします
+          </p>
+        </div>
       </Form >
     </div >
   );
