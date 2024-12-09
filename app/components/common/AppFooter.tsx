@@ -5,7 +5,10 @@ export const AppFooter = () => {
     <div className="text-center text-xs text-gray-500 leading-relaxed mt-16">
       <p className="mb-2 text-white">任天堂さんとは一切関係ありません。完全非公式のネタサービスです</p>
       <p className="mb-2 text-white">
-        作った人: <a href="https://twitter.com/retoruto_carry" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@retoruto_carry</a>
+        作った人: <a href="https://x.com/retoruto_carry" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@retoruto_carry</a>
+      </p>
+      <p className="mb-2 text-white">
+        絵を描いた人: <a href="https://x.com/kiyonagarin" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@kiyonagarin</a>
       </p>
       <Link to="/">
         <div className="flex items-center mb-4">
