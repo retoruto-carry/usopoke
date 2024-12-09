@@ -9,7 +9,7 @@ import html2canvas from "html2canvas";
 import { correctStyleDisplacement } from "~/utils/correctStyleDisplacement";
 import { Card3 } from "./card3/Card";
 
-const DEFAULT_IMAGE_SRC = `/images/back_of_card.png`
+const DEFAULT_IMAGE_SRC = `/images/back_of_card_with_text.png`
 const CARD_WIDTH = 360;
 const CARD_HEIGHT = CARD_WIDTH * 1.4;
 
