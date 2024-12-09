@@ -1,39 +1,41 @@
-const isMobile = () => {
-  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-};
+const isIos = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isAndroid = () => /Android/i.test(navigator.userAgent);
+const isMobile = () => isIos() || isAndroid();
 
-const isAndroid = () => {
-  return /Android/i.test(navigator.userAgent);
+/**
+ * 画像付きのWebShare APIの利用可否を判定する関数
+ * @returns {Promise<boolean>} - 画像付きのWebShare APIが利用可能かどうか
+ */
+const isWebShareApiWithFilesAvailable = async () => {
+  if (!navigator.share) return false;
+  try {
+    const file = new File([], 'dummy.png', { type: 'image/png' });
+    return navigator.canShare && navigator.canShare({ files: [file] });
+  } catch {
+    return false;
+  }
 };
 
 export const ShareButton = ({ imageUrl, text }: { imageUrl?: string, text: string }) => {
   const handleShare = async () => {
-    // モバイルデバイスでのみWebShare APIを使用
-    if (isMobile() && navigator.share && imageUrl) {
+    // iOSまたはAndroidの環境で、画像付きのWebShare APIが使える場合
+    if (isMobile() && imageUrl && await isWebShareApiWithFilesAvailable()) {
       try {
-        // Androidの場合は画像なしでシェア（intentの制限のため）
-        if (isAndroid()) {
-          await navigator.share({
-            text: text
-          });
-          return;
-        }
-
-        // iOSの場合は画像付きでシェア
         const response = await fetch(imageUrl);
         const blob = await response.blob();
         const file = new File([blob], 'share.png', { type: 'image/png' });
+
         await navigator.share({
           text: text,
-          files: [file]
+          files: [file],
         });
-        return;
-      } catch (error) {
-        console.error('WebShare API error:', error);
+        return
+      } catch {
+        // Web Share API での共有が失敗した場合は、intentリンクにフォールバック
       }
     }
 
-    // PCまたはWebShare API非対応の場合は従来のXシェアURL
+    // PCの場合はintentリンクを使ってTwitterで共有
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
     window.open(shareUrl, '_blank');
   };
@@ -49,4 +51,4 @@ export const ShareButton = ({ imageUrl, text }: { imageUrl?: string, text: strin
       <span className="text-lg">シェアする</span>
     </button>
   );
-}
+};
