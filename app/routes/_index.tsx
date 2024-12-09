@@ -4,7 +4,6 @@ import { CardForm } from "~/components/domain/card/CardForm";
 import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
 import { createCard } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
-import { useEffect, useState } from "react";
 import { AppFooter } from "~/components/common/AppFooter";
 
 export const action = async (actionFunctionArgs: ActionFunctionArgs) => {

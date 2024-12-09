@@ -1,4 +1,3 @@
-import type { MetaFunction } from "@remix-run/node";
 import { ActionFunctionArgs, LoaderFunction, json, redirect } from "@remix-run/cloudflare";
 import { useLoaderData, useSubmit, useSearchParams, useLocation } from "@remix-run/react";
 import { createServerSupabase } from "~/utils/supabase.server";
