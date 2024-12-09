@@ -9,7 +9,7 @@ import html2canvas from "html2canvas";
 import { correctStyleDisplacement } from "~/utils/correctStyleDisplacement";
 import { Card3 } from "./card3/Card";
 
-const DEFAULT_IMAGE_SRC = "https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg"
+const DEFAULT_IMAGE_SRC = `/images/back_of_card.png`
 const CARD_WIDTH = 360;
 const CARD_HEIGHT = CARD_WIDTH * 1.4;
 
@@ -36,7 +36,7 @@ type Props = {
 
 export function CardForm({ onSubmit }: Props) {
   const params = useParams();
-  const [preview, setPreview] = useState(DEFAULT_IMAGE_SRC);
+  const [previewImageSrc, setPreviewImageSrc] = useState(DEFAULT_IMAGE_SRC);
   const [showMove2, setShowMove2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { register, watch, setValue, reset } = useForm<FormInputs>({
@@ -53,7 +53,7 @@ export function CardForm({ onSubmit }: Props) {
 
   useEffect(() => {
     reset();
-    setPreview(DEFAULT_IMAGE_SRC);
+    setPreviewImageSrc(DEFAULT_IMAGE_SRC);
     setShowMove2(false);
   }, [params.id, reset]);
 
@@ -69,7 +69,7 @@ export function CardForm({ onSubmit }: Props) {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result as string);
+        setPreviewImageSrc(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -152,7 +152,7 @@ export function CardForm({ onSubmit }: Props) {
       <div className="fixed bottom-0 left-0 -translate-x-full bg-whte" ref={captureRef}>
         <div className="screen-shot" style={{ width: `${CARD_WIDTH}px`, height: `${CARD_HEIGHT}px` }}>
           <CardContent
-            imageSrc={preview}
+            imageSrc={previewImageSrc}
             hp={formValues.hp}
             name={formValues.name}
             moves={moves}
@@ -163,7 +163,7 @@ export function CardForm({ onSubmit }: Props) {
         <div className="screen-shot" style={{ width: `${CARD_WIDTH}px`, height: `${CARD_HEIGHT}px` }}>
           <Card3 width={CARD_WIDTH}>
             <CardContent
-              imageSrc={preview}
+              imageSrc={previewImageSrc}
               hp={formValues.hp}
               name={formValues.name}
               moves={moves}
