@@ -40,6 +40,8 @@
     "react-hook-form": "^7.54.0",
     "react-rewards": "^2.0.4",
     "react-textarea-autosize": "^8.5.6",
+    "react-twitter-embed": "^4.0.4",
+    "remix-utils": "^7.7.0",
     "tailwind-merge": "^2.5.4",
     "zod": "^3.23.8"
   },
