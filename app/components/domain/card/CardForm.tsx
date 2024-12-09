@@ -8,6 +8,7 @@ import { Checkbox } from "~/components/common/Checkbox";
 import html2canvas from "html2canvas";
 import { correctStyleDisplacement } from "~/utils/correctStyleDisplacement";
 import { Card3 } from "./card3/Card";
+import { TextareaAutoResize } from "~/components/common/TextareaAutoResize";
 
 const DEFAULT_IMAGE_SRC = `/images/back_of_card_with_text.png`
 const CARD_WIDTH = 360;
@@ -180,15 +181,15 @@ export function CardForm({ onSubmit }: Props) {
         <div className="flex flex-col gap-5 max-w-md">
           <div className="flex items-center gap-2">
             <Input type="text" {...register("name")} placeholder="名前" required className="flex-1" />
-            <Input type="text" {...register("hp")} placeholder="HP" required className="w-24" />
+            <Input type="text" {...register("hp")} placeholder="HP" className="w-24" />
           </div>
 
           <div className="space-y-2 p-2 border border-gray-200 ">
             <div className="flex items-center gap-2">
-              <Input type="text" {...register("move1.name")} placeholder="わざの名前" required className="flex-1" />
-              <Input type="text" {...register("move1.damage")} placeholder="ダメージ" required className="w-24" />
+              <Input type="text" {...register("move1.name")} placeholder="わざの名前" className="flex-1" />
+              <Input type="text" {...register("move1.damage")} placeholder="ダメージ" className="w-24" />
             </div>
-            <Input type="text" {...register("move1.info")} placeholder="説明" required />
+            <TextareaAutoResize {...register("move1.info")} minRows={2} placeholder="説明" />
           </div>
 
           {!showMove2 && (
@@ -207,7 +208,7 @@ export function CardForm({ onSubmit }: Props) {
                   <Input type="text" {...register("move2.name")} placeholder="わざの名前" required className="flex-1" />
                   <Input type="text" {...register("move2.damage")} placeholder="ダメージ" className="w-24" />
                 </div>
-                <Input type="text" {...register("move2.info")} placeholder="説明" />
+                <TextareaAutoResize {...register("move2.info")} placeholder="説明" minRows={2} />
                 <div className="absolute -top-5 -right-4">
                   <Button
                     size={"sm"}

@@ -77,7 +77,8 @@ const Move = ({ name, damage, info }: Move) => {
         fontSize: "0.9rem",
         fontFamily: "Arial, sans-serif",
         fontWeight: "bold",
-        textShadow: "-0.5px -0.5px 0 #FFF, 0.5px -0.5px 0 #FFF, -0.5px 0.5px 0 #FFF, 0.5px 0.5px 0 #FFF"
+        textShadow: "-0.5px -0.5px 0 #FFF, 0.5px -0.5px 0 #FFF, -0.5px 0.5px 0 #FFF, 0.5px 0.5px 0 #FFF",
+        whiteSpace: "pre-wrap"
       }}>
         {info}
       </p>
@@ -168,7 +169,7 @@ export const CardContent = ({ imageSrc, hp, name, moves }: CardContentProps) => 
       </div>
       <div style={{
         position: "absolute",
-        top: "64.5%",
+        top: "63%",
         left: "10%",
         right: "10%",
         width: "80%",
