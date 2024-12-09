@@ -82,6 +82,7 @@ export function CardForm({ onSubmit }: Props) {
     if (!captureRef.current) throw new Error("captureRef.current is null");
 
     const canvas = await html2canvas(captureRef.current, {
+      scale: 2,
       useCORS: true,
       removeContainer: true,
       x: 0,
@@ -90,7 +91,6 @@ export function CardForm({ onSubmit }: Props) {
       height: CARD_HEIGHT,
       scrollX: 0,
       scrollY: 0,
-      scale: 1,
     })
 
     removeStyle();
