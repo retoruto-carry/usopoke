@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import { TwitterTweetEmbed } from 'react-twitter-embed';
+import { Tweet } from 'react-twitter-widgets'
 import { ClientOnly } from "remix-utils/client-only";
 
 export const AppFooter = () => {
@@ -23,7 +23,7 @@ export const AppFooter = () => {
         <p className="text-white text-center text-xs mt-2">RTお願いします🙏</p>
         <div className="items-center justify-center mt-4 w-full">
           <ClientOnly>
-            {() => <TwitterTweetEmbed
+            {() => <Tweet
               tweetId={'1796123557090517067'}
             />}
           </ClientOnly>
