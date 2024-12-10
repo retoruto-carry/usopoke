@@ -23,6 +23,7 @@ export type Database = {
           move2_name: string
           name: string
           show_in_gallery: boolean
+          twitter_username: string | null
         }
         Insert: {
           created_at?: string
@@ -37,6 +38,7 @@ export type Database = {
           move2_name: string
           name: string
           show_in_gallery: boolean
+          twitter_username?: string | null
         }
         Update: {
           created_at?: string
@@ -51,6 +53,7 @@ export type Database = {
           move2_name?: string
           name?: string
           show_in_gallery?: boolean
+          twitter_username?: string | null
         }
         Relationships: []
       }
@@ -74,6 +77,7 @@ export type Database = {
           move2_name: string
           name: string
           show_in_gallery: boolean
+          twitter_username: string | null
         }[]
       }
     }

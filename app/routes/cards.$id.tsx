@@ -89,7 +89,10 @@ export default function Card() {
     startVelocity: 45,
   });
 
-  const shareText = `「${card.name}」のカードを${afterCreated ? '作りました' : '引き当てました'}\n\n#うそポケ画像メーカー\nhttps://usopoke.asonde.me/cards/${card.id}`;
+  const createdText = `「${card.name}」のカードを作りました\n\n#うそポケ画像メーカー\n\n↓ここからカードを動かせます！\nhttps://usopoke.asonde.me/cards/${card.id}`;
+  const authorTwitterUsernameText = card.twitter_username ? `\n（カードを作った人: @${card.twitter_username}）` : '';
+  const drawText = `「${card.name}」のカードを引き当てました${authorTwitterUsernameText}\n\n\n↓うそのポケポケの画像とパックを作ってみんなで遊ぼう\n#うそポケ画像メーカー\nhttps://usopoke.asonde.me/cards/${card.id}`;
+  const shareText = afterCreated ? createdText : drawText;
 
   const handleOnSubmit = async (formData: FormData) => {
     try {
@@ -127,6 +130,21 @@ export default function Card() {
                 />
               </Card3>
             </div>
+
+            {card.twitter_username && (
+              <div className="">
+                <div className="h-5" />
+                <p className="text-sm text-white text-center font-bold">
+                  カードを作った人: <a href={`https://x.com/${card.twitter_username}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline underline-offset-3 ml-1"
+                  >
+                    @{card.twitter_username}
+                  </a>
+                </p>
+              </div>
+            )}
 
             <div className="h-5" />
 

@@ -1,6 +1,6 @@
 import { Form, Link, useParams } from "@remix-run/react";
 import { useRef, useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { CardContent } from "~/components/domain/card_content/CardContent";
 import { Input } from "~/components/common/Input";
 import { Button } from "~/components/common/Button";
@@ -9,6 +9,8 @@ import html2canvas from "html2canvas";
 import { correctStyleDisplacement } from "~/utils/correctStyleDisplacement";
 import { Card3 } from "./card3/Card";
 import { TextareaAutoResize } from "~/components/common/TextareaAutoResize";
+import { AtSign } from "lucide-react";
+import { InputWithIcon } from "~/components/common/InputWithIcon";
 
 const DEFAULT_IMAGE_SRC = `/images/back_of_card_with_text.png`
 const CARD_WIDTH = 360;
@@ -29,6 +31,7 @@ type FormInputs = {
   };
   showInGallery: boolean;
   image: File | null;
+  twitterUsername: string | null;
 };
 
 type Props = {
@@ -40,7 +43,7 @@ export function CardForm({ onSubmit }: Props) {
   const [previewImageSrc, setPreviewImageSrc] = useState(DEFAULT_IMAGE_SRC);
   const [showMove2, setShowMove2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { register, watch, setValue, reset } = useForm<FormInputs>({
+  const { register, watch, setValue, reset, control } = useForm<FormInputs>({
     mode: 'onChange',
     defaultValues: {
       hp: "",
@@ -49,14 +52,27 @@ export function CardForm({ onSubmit }: Props) {
       move2: { name: "", damage: "", info: "" },
       showInGallery: true,
       image: null,
+      twitterUsername: "",
     },
   });
+
 
   useEffect(() => {
     reset();
     setPreviewImageSrc(DEFAULT_IMAGE_SRC);
     setShowMove2(false);
   }, [params.id, reset]);
+
+  const showInGallery = useWatch({
+    control: control,
+    name: "showInGallery"
+  });
+
+  useEffect(() => {
+    if (!showInGallery) {
+      setValue("twitterUsername", "");
+    }
+  }, [showInGallery, setValue]);
 
   const formValues = watch();
 
@@ -125,6 +141,7 @@ export function CardForm({ onSubmit }: Props) {
     formData.append('move2_damage', formValues.move2.damage);
     formData.append('move2_info', formValues.move2.info);
     formData.append('show_in_gallery', String(!!formValues.showInGallery));
+    formData.append('twitter_username', formValues.twitterUsername || "");
     return formData;
   };
 
@@ -240,6 +257,15 @@ export function CardForm({ onSubmit }: Props) {
             <p className="text-sm text-gray-500">
               「みんなが作ったカード」から出るようになります
             </p>
+            {formValues.showInGallery && (
+              <InputWithIcon
+                type="text"
+                {...register("twitterUsername")}
+                placeholder="作者のTwitterID (オプション)"
+                className="w-full"
+                icon={<AtSign className="h-4 w-4" />}
+              />
+            )}
           </div>
         </div>
 

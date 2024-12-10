@@ -17,6 +17,7 @@ export const createCard = async ({ request, context }: ActionFunctionArgs) => {
     move2_damage,
     move2_info,
     show_in_gallery,
+    twitter_username,
   } = Object.fromEntries(formData);
 
   const card = await uploadCardToSupabase({
@@ -31,7 +32,11 @@ export const createCard = async ({ request, context }: ActionFunctionArgs) => {
       move2_name: move2_name as string,
       move2_damage: move2_damage as string,
       move2_info: move2_info as string,
-      show_in_gallery: show_in_gallery === "true"
+      show_in_gallery: show_in_gallery === "true",
+      twitter_username: twitter_username
+        && (twitter_username as string).trim()
+        ? (twitter_username as string).trim()
+        : null,
     }
   });
 

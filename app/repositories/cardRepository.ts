@@ -14,6 +14,7 @@ type UploadCardOptions = {
     move2_damage: string;
     move2_info: string;
     show_in_gallery: boolean;
+    twitter_username: string | null;
   }
 };
 
@@ -54,7 +55,8 @@ export async function uploadCardToSupabase({
     move2_name: data.move2_name,
     move2_damage: data.move2_damage,
     move2_info: data.move2_info,
-    show_in_gallery: data.show_in_gallery
+    show_in_gallery: data.show_in_gallery,
+    twitter_username: data.twitter_username,
   }).select().single();
 
   if (dbError) {
