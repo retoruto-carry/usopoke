@@ -38,6 +38,9 @@ export const AppFooter = () => {
       <p className="mb-2 text-white font-medium text-md">
         <a href="https://x.com/mikkameee" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@mikkameee</a>
       </p>
+      <p className="mb-2 text-white font-medium text-md">
+        <a href="https://x.com/zugaaanzubababa" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@zugaaanzubababa</a>
+      </p>
     </div>
   );
 };
