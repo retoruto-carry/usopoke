@@ -29,6 +29,15 @@ export const AppFooter = () => {
           </ClientOnly>
         </div>
       </div>
+      <p className="mt-10 mb-2 text-white font-medium text-md">
+        Special thanks(サーバー代のご支援)
+      </p>
+      <p className="mb-2 text-white font-medium text-md">
+        <a href="https://x.com/spinute" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@spinute</a>
+      </p>
+      <p className="mb-2 text-white font-medium text-md">
+        <a href="https://x.com/mikkameee" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@mikkameee</a>
+      </p>
     </div>
   );
 };
