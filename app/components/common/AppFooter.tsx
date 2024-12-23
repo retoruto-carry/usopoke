@@ -39,7 +39,16 @@ export const AppFooter = () => {
         <a href="https://x.com/mikkameee" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@mikkameee</a>
       </p>
       <p className="mb-2 text-white font-medium text-md">
+        <a href="https://x.com/hakureifarm" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@hakureifarm</a>
+      </p>
+      <p className="mb-2 text-white font-medium text-md">
         <a href="https://x.com/zugaaanzubababa" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@zugaaanzubababa</a>
+      </p>
+      <p className="mb-2 text-white font-medium text-md">
+        <a href="https://x.com/matsueng" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@matsueng</a>
+      </p>
+      <p className="mb-2 text-white font-medium text-md">
+        <a href="https://x.com/kabutodayo_" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@kabutodayo_(おくびょうカブト)</a>
       </p>
     </div>
   );
