@@ -5,11 +5,11 @@ import { ClientOnly } from "remix-utils/client-only";
 export const AppFooter = () => {
   return (
     <div className="text-center text-xs text-gray-500 leading-relaxed mt-16">
-      <p className="mb-2 text-white">任天堂さんとは一切関係ありません。完全非公式のネタサービスです</p>
-      <p className="mb-2 text-white font-medium text-md">
+      <p className="text-white">任天堂さんとは一切関係ありません。完全非公式のネタサービスです</p>
+      <p className="mt-4 mb-2 text-white font-medium text-lg">
         開発した人: <a href="https://x.com/retoruto_carry" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@retoruto_carry</a>
       </p>
-      <p className="mb-2 text-white font-medium text-md">
+      <p className="mb-6 text-white font-medium text-lg">
         絵を描いた人: <a href="https://x.com/kiyonagarin" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@kiyonagarin</a>
       </p>
       <Link to="/">
@@ -29,25 +29,31 @@ export const AppFooter = () => {
           </ClientOnly>
         </div>
       </div>
-      <p className="mt-10 mb-2 text-white font-medium text-md">
-        Special thanks(サーバー代のご支援)
+      <p className="mt-10 mb-2 text-white font-medium text-lg">
+        <a href="https://donate.stripe.com/7sIcOMes0aRq8msdQQ" className="border-b underline underline-offset-4 underline:text-white" target="_blank" rel="noreferrer">サーバー代を支援する<small className="text-sm ml-3">(Google Pay / Apple Pay / クレカ)</small></a>
       </p>
-      <p className="mb-2 text-white font-medium text-md">
+      <p className="mt-3 mb-2 text-white font-medium text-lg">
+        <a href="https://www.amazon.co.jp/hz/wishlist/ls/2MSHR2CU894JT?ref_=wl_share" className="border-b underline underline-offset-4 underline:text-white" target="_blank" rel="noreferrer">ほしいものリストを送る</a>
+      </p>
+      <p className="mt-10 mb-2 text-white font-medium text-lg">
+        支援者のみなさま（Special thanks）
+      </p>
+      <p className="mb-2 text-white font-medium text-lg">
         <a href="https://x.com/spinute" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@spinute</a>
       </p>
-      <p className="mb-2 text-white font-medium text-md">
+      <p className="mb-2 text-white font-medium text-lg">
         <a href="https://x.com/mikkameee" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@mikkameee</a>
       </p>
-      <p className="mb-2 text-white font-medium text-md">
+      <p className="mb-2 text-white font-medium text-lg">
         <a href="https://x.com/hakureifarm" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@hakureifarm</a>
       </p>
-      <p className="mb-2 text-white font-medium text-md">
+      <p className="mb-2 text-white font-medium text-lg">
         <a href="https://x.com/zugaaanzubababa" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@zugaaanzubababa</a>
       </p>
-      <p className="mb-2 text-white font-medium text-md">
+      <p className="mb-2 text-white font-medium text-lg">
         <a href="https://x.com/matsueng" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@matsueng</a>
       </p>
-      <p className="mb-2 text-white font-medium text-md">
+      <p className="mb-2 text-white font-medium text-lg">
         <a href="https://x.com/kabutodayo_" className="border-b border-gray-500 border-dotted" target="_blank" rel="noreferrer">@kabutodayo_(おくびょうカブト)</a>
       </p>
     </div>
