@@ -1,25 +1,22 @@
-import { LoaderFunctionArgs, json, ActionFunctionArgs, redirect } from "@remix-run/cloudflare";
+import { data, redirect, useNavigate, useLoaderData } from "react-router";
+import type { Route } from "./+types/draw";
+import { appContext } from "~/context.server";
 import { getCardServices } from "~/services/cardService";
 import { useEffect } from "react";
-import { useNavigate, useLoaderData } from "@remix-run/react";
 
-type ActionResponse = {
-  error?: string;
-};
-
-export const loader = async ({ request, context }: LoaderFunctionArgs) => {
-  const card = await getCardServices({ request, context }).getRandomCard();
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
+  const card = await getCardServices({ request, context: context.get(appContext) }).getRandomCard();
   if (!card) {
-    throw json<ActionResponse>({ error: "不明なエラーが発生しました。" }, { status: 400 });
+    throw data({ error: "不明なエラーが発生しました。" }, { status: 400 });
   }
 
-  return json({ card });
+  return { card };
 };
 
-export const action = async ({ request, context }: ActionFunctionArgs) => {
-  const card = await getCardServices({ request, context }).getRandomCard();
+export const action = async ({ request, context }: Route.ActionArgs) => {
+  const card = await getCardServices({ request, context: context.get(appContext) }).getRandomCard();
   if (!card) {
-    throw json({ message: "カードの取得に失敗しました。" }, { status: 500 });
+    throw data({ message: "カードの取得に失敗しました。" }, { status: 500 });
   }
 
   return redirect(`/cards/${card.id}?from=draw`);

@@ -1,6 +1,6 @@
 import { RefObject } from "react";
 
-export const updateCardInteractive = ({ x, y, cardRef }: { x: number; y: number, cardRef: RefObject<HTMLDivElement> }) => {
+export const updateCardInteractive = ({ x, y, cardRef }: { x: number; y: number, cardRef: RefObject<HTMLDivElement | null> }) => {
   const BOUNDS = cardRef.current?.getBoundingClientRect();
   const pointerX = x - (BOUNDS?.x ?? 0);
   const pointerY = y - (BOUNDS?.y ?? 0);

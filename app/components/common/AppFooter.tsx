@@ -1,6 +1,44 @@
-import { Link } from "@remix-run/react";
-import { Tweet } from 'react-twitter-widgets'
-import { ClientOnly } from "remix-utils/client-only";
+import { Link } from "react-router";
+import { useEffect, useRef } from "react";
+
+type TwitterWindow = Window & {
+  twttr?: { widgets: { createTweet(id: string, element: HTMLElement): Promise<HTMLElement | undefined> } };
+};
+
+let twitterScript: Promise<void> | undefined;
+
+function FooterTweet() {
+  const container = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = container.current;
+    const twitter = window as TwitterWindow;
+
+    twitterScript ??= new Promise<void>((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://platform.twitter.com/widgets.js";
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => {
+        twitterScript = undefined;
+        script.remove();
+        reject(new Error("Twitter widget failed to load"));
+      };
+      document.head.appendChild(script);
+    });
+
+    let active = true;
+    void twitterScript.then(() => {
+      if (active && element) {
+        return twitter.twttr?.widgets.createTweet("1796123557090517067", element);
+      }
+    }).catch(() => {});
+
+    return () => { active = false; };
+  }, []);
+
+  return <div ref={container} />;
+}
 
 export const AppFooter = () => {
   return (
@@ -22,11 +60,7 @@ export const AppFooter = () => {
         <p className="text-white font-bold text-center text-lg">↓こんなサービスも作ってます</p>
         <p className="text-white text-center text-xs mt-2">RTお願いします🙏</p>
         <div className="items-center justify-center mt-4 w-full">
-          <ClientOnly>
-            {() => <Tweet
-              tweetId={'1796123557090517067'}
-            />}
-          </ClientOnly>
+          <FooterTweet />
         </div>
       </div>
       <p className="mt-10 mb-2 text-white font-medium text-lg">

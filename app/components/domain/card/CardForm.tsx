@@ -1,4 +1,4 @@
-import { Form, Link, useParams } from "@remix-run/react";
+import { Form, Link, useParams } from "react-router";
 import { useRef, useState, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CardContent } from "~/components/domain/card_content/CardContent";
@@ -50,7 +50,7 @@ export function CardForm({ onSubmit }: Props) {
       name: "",
       move1: { name: "", damage: "", info: "" },
       move2: { name: "", damage: "", info: "" },
-      showInGallery: true,
+      showInGallery: false,
       image: null,
       twitterUsername: "",
     },
@@ -93,7 +93,7 @@ export function CardForm({ onSubmit }: Props) {
   };
   const captureRef = useRef<HTMLDivElement>(null);
 
-  const generateCardImage = async (captureRef: React.RefObject<HTMLDivElement>): Promise<File> => {
+  const generateCardImage = async (captureRef: React.RefObject<HTMLDivElement | null>): Promise<File> => {
     const removeStyle = correctStyleDisplacement();
 
     if (!captureRef.current) throw new Error("captureRef.current is null");

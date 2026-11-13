@@ -14,7 +14,7 @@ export const updateCardInteractive = ({
 }: { 
   x: number; 
   y: number;
-  cardRef: RefObject<HTMLDivElement>;
+  cardRef: RefObject<HTMLDivElement | null>;
 }) => {
   const BOUNDS = cardRef.current?.getBoundingClientRect();
   if (!BOUNDS) return null;

@@ -1,12 +1,11 @@
-import type { LinksFunction } from "@remix-run/cloudflare";
-
 import {
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
+  type LinksFunction,
+} from "react-router";
 
 import "./tailwind.css";
 

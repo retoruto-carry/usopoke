@@ -1,17 +1,18 @@
-import { useSubmit } from "@remix-run/react";
+import { data, redirect, useSubmit } from "react-router";
 import Draw from "~/components/domain/draw/draw";
 import { CardForm } from "~/components/domain/card/CardForm";
-import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
+import type { Route } from "./+types/_index";
+import { appContext } from "~/context.server";
 import { createCard } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
 import { AppFooter } from "~/components/common/AppFooter";
 
-export const action = async (actionFunctionArgs: ActionFunctionArgs) => {
+export const action = async ({ request, context }: Route.ActionArgs) => {
   try {
-    const card = await createCard(actionFunctionArgs);
+    const card = await createCard({ request, context: context.get(appContext) });
     return redirect(`/cards/${card.id}?created=true`);
   } catch (error) {
-    return json({ error: (error as Error)?.message || "保存に失敗しました。" }, { status: 500 });
+    return data({ error: (error as Error)?.message || "保存に失敗しました。" }, { status: 500 });
   }
 };
 
