@@ -27,6 +27,14 @@ export default function Draw() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const image = new Image();
+    image.src = card.image_url;
+    void image.decode().catch(() => {
+      // The results page handles failed or incomplete preloads.
+    });
+  }, [card.image_url]);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       navigate(`/cards/${card.id}`);
     }, 3000);

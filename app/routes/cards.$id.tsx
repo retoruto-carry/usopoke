@@ -5,6 +5,7 @@ import { appContext } from "~/context.server";
 import Draw from "~/components/domain/draw/draw";
 import { Card3 } from "~/components/domain/card/card3/Card";
 import { CardForm } from "~/components/domain/card/CardForm";
+import { ResultCardImage } from "~/components/domain/card/ResultCardImage";
 import { createCardAction, getCardRepository } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
 import { ShareButton } from "~/components/common/ShareButton";
@@ -111,13 +112,7 @@ export default function Card() {
           <div className="space-y-4 w-full">
             <div className="w-full flex justify-center">
               <Card3 width={cardWidth}>
-                <img
-                  width={cardWidth}
-                  height={cardWidth * 1.4}
-                  src={card.image_url}
-                  alt="カード"
-                  className="w-full rounded-lg"
-                />
+                <ResultCardImage key={card.image_url} src={card.image_url} width={cardWidth} />
               </Card3>
             </div>
 

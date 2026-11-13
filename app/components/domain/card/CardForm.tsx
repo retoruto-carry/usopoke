@@ -214,6 +214,7 @@ export function CardForm({ onSubmit }: Props) {
 
           {!showMove2 && (
             <Button
+              type="button"
               onClick={() => setShowMove2(true)}
               variant="outline"
             >
@@ -231,6 +232,7 @@ export function CardForm({ onSubmit }: Props) {
                 <TextareaAutoResize {...register("move2.info")} placeholder="説明" minRows={2} />
                 <div className="absolute -top-5 -right-4">
                   <Button
+                    type="button"
                     size={"sm"}
                     variant="outline"
                     className="bg-white h-7 w-7"
