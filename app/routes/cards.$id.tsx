@@ -1,11 +1,10 @@
 import { ActionFunctionArgs, LoaderFunction, json, redirect } from "@remix-run/cloudflare";
 import { useLoaderData, useSubmit, useSearchParams, useLocation } from "@remix-run/react";
-import { createServerSupabase } from "~/utils/supabase.server";
-import type { Database } from "~/types/supabase";
+import type { Card as CardData } from "~/types/card";
 import Draw from "~/components/domain/draw/draw";
 import { Card3 } from "~/components/domain/card/card3/Card";
 import { CardForm } from "~/components/domain/card/CardForm";
-import { createCard } from "~/services/cardService";
+import { createCard, getCardServices } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
 import { ShareButton } from "~/components/common/ShareButton";
 import { useConfetti } from "~/hooks/useConfetti";
@@ -13,21 +12,18 @@ import { useState, useEffect } from "react";
 import { AppFooter } from "~/components/common/AppFooter";
 
 type LoaderData = {
-  card: Database["public"]["Tables"]["cards"]["Row"];
+  card: CardData;
 };
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
-  const response = new Response();
-  const supabase = createServerSupabase({ request, response, context });
-
   const id = params.id;
   if (!id) {
     throw json({ message: "カードIDが指定されていません。" }, { status: 400 });
   }
 
-  const { data: card, error } = await supabase.from("cards").select().eq("id", id).single();
+  const card = await getCardServices({ request, context }).getCard(id);
 
-  if (error || !card) {
+  if (!card) {
     throw json({ message: "カードが見つかりませんでした。" }, { status: 404 });
   }
 

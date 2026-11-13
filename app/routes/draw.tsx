@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs, json, ActionFunctionArgs, redirect } from "@remix-run/cloudflare";
-import { createServerSupabase } from "~/utils/supabase.server";
+import { getCardServices } from "~/services/cardService";
 import { useEffect } from "react";
 import { useNavigate, useLoaderData } from "@remix-run/react";
 
@@ -8,27 +8,21 @@ type ActionResponse = {
 };
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
-  const response = new Response();
-  const supabase = createServerSupabase({ request, response, context });
-
-  const { data: cards, error } = await supabase.rpc("get_random_card");
-  if (error || !cards) {
+  const card = await getCardServices({ request, context }).getRandomCard();
+  if (!card) {
     throw json<ActionResponse>({ error: "不明なエラーが発生しました。" }, { status: 400 });
   }
 
-  return json({ card: cards[0] });
+  return json({ card });
 };
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
-  const response = new Response();
-  const supabase = createServerSupabase({ request, response, context });
-
-  const { data: cards, error } = await supabase.rpc("get_random_card");
-  if (error || !cards || !cards[0]) {
+  const card = await getCardServices({ request, context }).getRandomCard();
+  if (!card) {
     throw json({ message: "カードの取得に失敗しました。" }, { status: 500 });
   }
 
-  return redirect(`/cards/${cards[0].id}?from=draw`);
+  return redirect(`/cards/${card.id}?from=draw`);
 };
 
 export default function Draw() {
