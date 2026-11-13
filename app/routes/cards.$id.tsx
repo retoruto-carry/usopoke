@@ -10,7 +10,7 @@ import { createCardAction, getCardRepository } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
 import { ShareButton } from "~/components/common/ShareButton";
 import { useConfetti } from "~/hooks/useConfetti";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AppFooter } from "~/components/common/AppFooter";
 
 export const loader = async ({ context, params }: Route.LoaderArgs) => {
@@ -73,10 +73,13 @@ export default function Card() {
     }
   }, []);
 
+  const [revealedCardId, setRevealedCardId] = useState<string | null>(null);
+  const handleImageReady = useCallback(() => setRevealedCardId(card.id), [card.id]);
+
   const { elementIdLeft, elementIdRight } = useConfetti({
     triggerOnMount: true,
-    triggerCondition: !!location.key,
-    lifetime: 2000,
+    triggerCondition: !!location.key && revealedCardId === card.id,
+    lifetime: 120,
     startVelocity: 45,
   });
 
@@ -112,7 +115,7 @@ export default function Card() {
           <div className="space-y-4 w-full">
             <div className="w-full flex justify-center">
               <Card3 width={cardWidth}>
-                <ResultCardImage key={card.image_url} src={card.image_url} width={cardWidth} />
+                <ResultCardImage key={card.image_url} src={card.image_url} width={cardWidth} onReady={handleImageReady} />
               </Card3>
             </div>
 

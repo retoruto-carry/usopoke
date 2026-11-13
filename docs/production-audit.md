@@ -55,3 +55,11 @@ Deployed Worker version: `e65c1eaa-e97f-43fe-bee3-78ab7977844b`.
 ### Recovery scope
 
 The local archive provides card rows, every original storage object, schema descriptions, and legacy Auth user/identity records. It is a data-reconstruction backup, not an in-place restoration of a deleted Supabase project. Rebuilding on Supabase would require a new project, schema/import work, and reconnection; old project IDs/URLs and existing sessions are not restored. An end-to-end restoration into a new Supabase project has not been performed. New Cloudflare posts are not part of the migration-time snapshot.
+
+## Opening-flow polish — 2026-11-14 JST
+
+Production was exercised from the pack button through the three-second opening and card reveal, including deliberately delayed images. The opening screen now keeps the purple background, eliminating the abrupt white-screen change. The front reveal uses ready-state keyframes so cached images also animate consistently.
+
+Confetti is synchronized with decoded image readiness instead of route mount. Review also found that freshly allocated react-rewards configuration objects caused the reward callback/effect to change on every render, allowing repeated bursts. The configuration is now memoized. The library counts lifetime in frames, so the previous 2,000-frame setting was changed to 120 frames at 60fps (about two seconds). Reduced-motion mode skips confetti and uses the short opacity-only reveal.
+
+Typecheck, lint and build passed. Browser verification on the deployed version showed zero particles while the image was held, 150 particles immediately after reveal (75 per side), and zero after completion without repeated firing. Reduced-motion verification showed zero particles and a 100ms opacity animation. Final production browser error/warning logs were empty in the observed flow. Deployed version: `39b16de6-4ad7-4e72-8c8f-a8433725d5d5`.

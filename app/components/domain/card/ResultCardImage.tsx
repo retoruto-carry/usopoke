@@ -1,8 +1,12 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./resultCardImage.css";
 
-export function ResultCardImage({ src, width }: { src: string; width: number }) {
+export function ResultCardImage({ src, width, onReady }: { src: string; width: number; onReady?: () => void }) {
   const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading");
+
+  useEffect(() => {
+    if (status === "ready") onReady?.();
+  }, [status, onReady]);
 
   const reveal = useCallback((image: HTMLImageElement) => {
     void image.decode().then(
