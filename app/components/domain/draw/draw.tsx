@@ -9,6 +9,7 @@ export default function Draw({ title }: { title: string }) {
 
   return (
     <div className="max-w-md mx-auto p-4 bg-gray-50">
+      <link rel="preload" as="image" href="/images/pack_open.gif" />
       <div className="mt-6 bg-purple-400 p-4 text-white text-center font-boldj">
         {title}
         <span className="text-xs">（ランダム）</span>

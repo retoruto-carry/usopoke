@@ -45,7 +45,7 @@ export default function Draw() {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-primary text-white">
       <p className="text-white mt-5">カードを引いています...</p>
-      <img src="/images/pack_open.gif" alt="" className="w-64" />
+      <img src="/images/pack_open.gif" alt="" width={825} height={768} className="w-64 h-auto" />
       <a href={`/cards/${card.id}`} className="text-white mt-16 underline text-sm">待ち切れない...？</a>
       <a href="https://donate.stripe.com/7sIcOMes0aRq8msdQQ" className="text-white mt-10 underline text-sm" target="_blank" rel="noreferrer">サーバー代を支援<small>（Google Pay / Apple Pay / クレカ）</small></a>
       <a href="https://www.amazon.co.jp/hz/wishlist/ls/2MSHR2CU894JT?ref_=wl_share" className="text-white mt-4 underline text-sm" target="_blank" rel="noreferrer">開発者にほしいものリストを送る</a>
