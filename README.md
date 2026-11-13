@@ -5,8 +5,9 @@
 Qiitaの解説記事
 [【個人開発】嘘のポケポケのカードを作れるサービスを作った【コード全公開】 \#cloudflare \- Qiita](https://qiita.com/retoruto_carry/items/66725ea6fdd899d8f210)
 
-リリースツイート
-https://x.com/retoruto_carry/status/1796123557090517067
+[リリースツイート
+](https://x.com/retoruto_carry/status/1866425470914531456
+)
 
 # これは何？
 
