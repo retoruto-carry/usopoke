@@ -1,22 +1,18 @@
-import { data, redirect, useSubmit } from "react-router";
+import { useActionData, useSubmit } from "react-router";
 import Draw from "~/components/domain/draw/draw";
 import { CardForm } from "~/components/domain/card/CardForm";
 import type { Route } from "./+types/_index";
 import { appContext } from "~/context.server";
-import { createCard } from "~/services/cardService";
+import { createCardAction } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
 import { AppFooter } from "~/components/common/AppFooter";
 
-export const action = async ({ request, context }: Route.ActionArgs) => {
-  try {
-    const card = await createCard({ request, context: context.get(appContext) });
-    return redirect(`/cards/${card.id}?created=true`);
-  } catch (error) {
-    return data({ error: (error as Error)?.message || "保存に失敗しました。" }, { status: 500 });
-  }
-};
+export function action({ request, context }: Route.ActionArgs) {
+  return createCardAction(request, context.get(appContext).cloudflare.env);
+}
 
 export default function Index() {
+  const actionData = useActionData<typeof action>();
   const submit = useSubmit();
 
   const handleOnSubmit = async (formData: FormData) => {
@@ -40,6 +36,7 @@ export default function Index() {
           ↓カードをつくろう！
         </div>
 
+        {actionData?.error && <p role="alert" className="mb-4 bg-white p-3 text-sm text-red-700">{actionData.error}</p>}
         <CardForm onSubmit={handleOnSubmit} />
 
         <div className="h-12" />

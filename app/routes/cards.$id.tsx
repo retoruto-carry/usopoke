@@ -1,23 +1,24 @@
-import { data, redirect, useLoaderData, useSubmit, useSearchParams, useLocation } from "react-router";
+import { data, useActionData, useLoaderData, useSubmit, useSearchParams, useLocation } from "react-router";
 import type { Route } from "./+types/cards.$id";
+import { isCardId } from "~/services/http.server";
 import { appContext } from "~/context.server";
 import Draw from "~/components/domain/draw/draw";
 import { Card3 } from "~/components/domain/card/card3/Card";
 import { CardForm } from "~/components/domain/card/CardForm";
-import { createCard, getCardServices } from "~/services/cardService";
+import { createCardAction, getCardRepository } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
 import { ShareButton } from "~/components/common/ShareButton";
 import { useConfetti } from "~/hooks/useConfetti";
 import { useState, useEffect } from "react";
 import { AppFooter } from "~/components/common/AppFooter";
 
-export const loader = async ({ request, context, params }: Route.LoaderArgs) => {
+export const loader = async ({ context, params }: Route.LoaderArgs) => {
   const id = params.id;
-  if (!id) {
+  if (!id || !isCardId(id)) {
     throw data({ message: "カードIDが指定されていません。" }, { status: 400 });
   }
 
-  const card = await getCardServices({ request, context: context.get(appContext) }).getCard(id);
+  const card = await getCardRepository(context.get(appContext).cloudflare.env).getCard(id.toLowerCase());
 
   if (!card) {
     throw data({ message: "カードが見つかりませんでした。" }, { status: 404 });
@@ -28,6 +29,7 @@ export const loader = async ({ request, context, params }: Route.LoaderArgs) => 
 
 export const meta = ({ loaderData }: Route.MetaArgs) => {
   const card = loaderData?.card;
+  if (!card) return [{ title: "うそポケ画像メーカー" }];
   const title = `${card?.name}のカード｜うそポケ画像メーカー`;
   const description = "嘘のぽけぽけのカードを作ってあそぼう！";
   const ogpImageUrl = `https://usopoke.asonde.me/card-ogp.png?id=${card?.id}`;
@@ -47,14 +49,9 @@ export const meta = ({ loaderData }: Route.MetaArgs) => {
 };
 
 
-export const action = async ({ request, context }: Route.ActionArgs) => {
-  try {
-    const card = await createCard({ request, context: context.get(appContext) });
-    return redirect(`/cards/${card.id}?created=true`);
-  } catch (error) {
-    return data({ error: (error as Error)?.message || "保存に失敗しました。" }, { status: 500 });
-  }
-};
+export function action({ request, context }: Route.ActionArgs) {
+  return createCardAction(request, context.get(appContext).cloudflare.env);
+}
 
 const CARD_WIDTH = 320;
 const MOBILE_CARD_WIDTH = 320;
@@ -62,6 +59,7 @@ const MD_BREAKPOINT = 448;
 
 export default function Card() {
   const { card } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
   const submit = useSubmit();
   const [searchParams] = useSearchParams();
   const afterCreated = searchParams.get('created');
@@ -177,6 +175,7 @@ export default function Card() {
         <div className="p-4 text-white text-center mb-4 font-bold text-xl">
           ↓カードをつくろう！
         </div>
+        {actionData?.error && <p role="alert" className="mb-4 bg-white p-3 text-sm text-red-700">{actionData.error}</p>}
         <CardForm onSubmit={handleOnSubmit} />
 
         <AppFooter />

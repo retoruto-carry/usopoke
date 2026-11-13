@@ -7,5 +7,6 @@ export default [
   route("terms", "routes/terms.tsx"),
   route("card_test", "routes/card_test.tsx"),
   route("ogp-test", "routes/ogp-test.tsx"),
+  route("card-images/:key", "routes/card-image.ts"),
   route("card-ogp.png", "routes/card-ogp.tsx"),
 ] satisfies RouteConfig;

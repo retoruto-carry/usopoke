@@ -14,19 +14,13 @@
     "typegen": "wrangler types --strict-vars false",
     "preview": "npm run build && npm run start",
     "cf-typegen": "npm run typegen",
-    "supabase-typegen": "supabase gen types typescript --project-id \"bppgbaxsswwmvfxabgmk\" > ./app/types/supabase.ts",
-    "supabase-db:pull": "supabase db pull",
-    "supabase-db:pull-auth-storage": "supabase db pull --schema auth, storage",
-    "supabase-db:push": "supabase db push",
-    "supabase-db:commit": "supabase db commit"
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.0",
     "@react-spring/web": "^10.1.2",
-    "@supabase/auth-helpers-remix": "^0.4.0",
-    "@supabase/supabase-js": "2.45.4",
-    "cf-workers-og": "3.0.1",
+    "@resvg/resvg-wasm": "2.6.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "html2canvas": "^1.4.1",
@@ -55,6 +49,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.14.0",
+    "miniflare": "5.20261110.0-beta",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
     "typescript": "~6.0.3",
@@ -64,5 +59,10 @@
   },
   "engines": {
     "node": ">=22.22.0"
+  },
+  "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.1"
+    }
   }
 }

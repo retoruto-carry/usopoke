@@ -1,11 +1,14 @@
-const CARD_WIDTH = 400;
-const CARD_HEIGHT = CARD_WIDTH * 1.4;
+export const CARD_WIDTH = 400;
+export const CARD_HEIGHT = CARD_WIDTH * 14 / 10;
+export const CARD_RADIUS = 15;
+export const OGP_WIDTH = 1200;
+export const OGP_HEIGHT = 630;
 
 export const CardOgp = ({ imageUrl }: { imageUrl: string }) => {
   return (
     <div style={{
-      width: "1200px",
-      height: "630px",
+      width: `${OGP_WIDTH}px`,
+      height: `${OGP_HEIGHT}px`,
       backgroundColor: "#f0f0f0",
       display: "flex",
       justifyContent: "center",
@@ -16,7 +19,7 @@ export const CardOgp = ({ imageUrl }: { imageUrl: string }) => {
         src={imageUrl}
         alt=""
         style={{
-          borderRadius: "15px",
+          borderRadius: `${CARD_RADIUS}px`,
           width: `${CARD_WIDTH}px`,
           height: `${CARD_HEIGHT}px`,
           boxShadow: "0 0 10px 0 rgba(0, 0, 0, 10)"

@@ -3,10 +3,41 @@ name = "usopoke"
 main = "workers/app.ts"
 compatibility_date = "2026-11-13"
 compatibility_flags = ["nodejs_compat"]
+workers_dev = true
 
 [assets]
 directory = "./build/client"
 
-[vars]
-SUPABASE_URL = "https://bppgbaxsswwmvfxabgmk.supabase.co"
-SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJwcGdiYXhzc3d3bXZmeGFiZ21rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI0MjU4NTAsImV4cCI6MjA0ODAwMTg1MH0.FpMNmi6WIcFmvDzp0AkPam2Vxe7D7wurKNfe2V07A_c"
+[[d1_databases]]
+binding = "DB"
+database_name = "usopoke-db"
+database_id = "959f6265-b4f6-4d09-b2bd-7f7b9a83ba0b"
+
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "usopoke-images"
+
+[[ratelimits]]
+name = "RATE_LIMIT_WRITE"
+namespace_id = "25101"
+simple = { limit = 5, period = 60 }
+
+[[ratelimits]]
+name = "RATE_LIMIT_READ"
+namespace_id = "25102"
+simple = { limit = 120, period = 60 }
+
+[[ratelimits]]
+name = "RATE_LIMIT_OGP"
+namespace_id = "25103"
+simple = { limit = 20, period = 60 }
+
+[triggers]
+crons = ["0 18 * * *"]
+
+[observability]
+enabled = true
+head_sampling_rate = 0.1
+
+[limits]
+cpu_ms = 1000

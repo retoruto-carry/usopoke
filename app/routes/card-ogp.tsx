@@ -1,34 +1,49 @@
-import { ImageResponse } from "cf-workers-og/workerd";
 import type { Route } from "./+types/card-ogp";
 import { appContext } from "~/context.server";
-import { CardOgp } from "~/components/domain/ogp/CardOgp";
-import { getCardServices } from "~/services/cardService";
+import { renderCardOgp } from "~/components/domain/ogp/renderCardOgp.server";
+import { cardImageKeyFromPath } from "~/repositories/r2ImageStore.server";
+import { getCardRepository } from "~/services/cardService";
+import {
+  cacheHeaders,
+  defaultCache,
+  canonicalCacheRequest,
+  conditionalImageResponse,
+  enforceRateLimit,
+  isCardId,
+  notFound,
+  storeImageResponse,
+} from "~/services/http.server";
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const url = new URL(request.url);
-  const cardId = url.searchParams.get("id");
+const layoutVersion = "v2";
 
-  if (!cardId) {
-    return new Response("カードIDが指定されていません。", { status: 400 });
+export async function loader({ request, context }: Route.LoaderArgs) {
+  const { env, ctx } = context.get(appContext).cloudflare;
+  const cardId = new URL(request.url).searchParams.get("id");
+  if (!cardId || !isCardId(cardId)) {
+    return new Response(cardId ? "カードIDが不正です。" : "カードIDが指定されていません。", {
+      status: 400, headers: { "Cache-Control": "no-store" },
+    });
   }
 
-  const card = await getCardServices({
-    request,
-    context: context.get(appContext),
-  }).getCard(cardId);
+  const id = cardId.toLowerCase();
+  const cacheKey = canonicalCacheRequest(request, `/card-ogp-cache/${layoutVersion}/${id}.png`);
+  const cached = await defaultCache().match(cacheKey);
+  if (cached) return conditionalImageResponse(request, cached);
 
-  if (!card) {
-    return new Response("カードが見つかりませんでした。", { status: 400 });
-  }
+  await enforceRateLimit(request, env.RATE_LIMIT_OGP, "card-ogp");
+  const card = await getCardRepository(env).getCardWithExpiry(id);
+  if (!card) return notFound();
 
-  return ImageResponse.create(
-    <CardOgp imageUrl={card.image_url} />,
-    {
-      width: 1200,
-      height: 630,
-      headers: {
-        'content-type': 'image/png',
-      },
-    }
-  );
-};
+  const key = cardImageKeyFromPath(card.image_url);
+  if (!key) return notFound();
+  const object = await env.IMAGES.get(key);
+  if (!object) return notFound();
+
+  const png = await renderCardOgp(await object.arrayBuffer());
+  const headers = cacheHeaders(card.expires_at);
+  headers.set("Content-Type", "image/png");
+  headers.set("ETag", `"${layoutVersion}-${object.etag}"`);
+  const response = new Response(png, { headers });
+  storeImageResponse(ctx, cacheKey, response);
+  return conditionalImageResponse(request, response);
+}

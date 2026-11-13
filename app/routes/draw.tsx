@@ -1,11 +1,11 @@
 import { data, redirect, useNavigate, useLoaderData } from "react-router";
 import type { Route } from "./+types/draw";
 import { appContext } from "~/context.server";
-import { getCardServices } from "~/services/cardService";
+import { getCardRepository } from "~/services/cardService";
 import { useEffect } from "react";
 
-export const loader = async ({ request, context }: Route.LoaderArgs) => {
-  const card = await getCardServices({ request, context: context.get(appContext) }).getRandomCard();
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const card = await getCardRepository(context.get(appContext).cloudflare.env).getRandomCard();
   if (!card) {
     throw data({ error: "不明なエラーが発生しました。" }, { status: 400 });
   }
@@ -13,8 +13,8 @@ export const loader = async ({ request, context }: Route.LoaderArgs) => {
   return { card };
 };
 
-export const action = async ({ request, context }: Route.ActionArgs) => {
-  const card = await getCardServices({ request, context: context.get(appContext) }).getRandomCard();
+export const action = async ({ context }: Route.ActionArgs) => {
+  const card = await getCardRepository(context.get(appContext).cloudflare.env).getRandomCard();
   if (!card) {
     throw data({ message: "カードの取得に失敗しました。" }, { status: 500 });
   }

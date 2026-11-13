@@ -1,4 +1,4 @@
-import { Form, Link, useParams } from "react-router";
+import { Form, Link, useNavigation, useParams } from "react-router";
 import { useRef, useState, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CardContent } from "~/components/domain/card_content/CardContent";
@@ -42,7 +42,9 @@ export function CardForm({ onSubmit }: Props) {
   const params = useParams();
   const [previewImageSrc, setPreviewImageSrc] = useState(DEFAULT_IMAGE_SRC);
   const [showMove2, setShowMove2] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const navigation = useNavigation();
+  const isLoading = isGenerating || navigation.formData?.has("image");
   const { register, watch, setValue, reset, control } = useForm<FormInputs>({
     mode: 'onChange',
     defaultValues: {
@@ -147,7 +149,7 @@ export function CardForm({ onSubmit }: Props) {
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsGenerating(true);
 
     try {
       const imageFile = await generateCardImage(captureRef);
@@ -161,7 +163,8 @@ export function CardForm({ onSubmit }: Props) {
       onSubmit(formData);
     } catch (error) {
       console.error('カード画像の生成に失敗しました:', error);
-      setIsLoading(false);
+    } finally {
+      setIsGenerating(false);
     }
   };
 

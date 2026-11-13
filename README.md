@@ -49,57 +49,38 @@ https://x.com/retoruto_carry/status/1796123557090517067
 
 
 
-# Welcome to Remix + Cloudflare!
+## 開発・運用
 
-- 📖 [Remix docs](https://remix.run/docs)
-- 📖 [Remix Cloudflare docs](https://remix.run/guides/vite#cloudflare)
+React Router 8（Framework Mode）を Cloudflare Workers 上で実行します。カード情報は D1、画像は非公開の R2 バケットに保存します。ログインは不要です。
 
-# 事前準備
-```
-# supabase cli をインストール
-brew install supabase/tap/supabase
-supabase login
-```
-
-## Development
-
-Run the dev server:
+Node.js 22.22 以降を利用してください。
 
 ```sh
+npm ci
+npm run typegen
+npx wrangler d1 migrations apply DB --local
 npm run dev
 ```
 
-To run Wrangler:
+ローカルの D1・R2 は `.wrangler/state` に保存され、本番データとは分離されます。空のDBでは、カード作成時に「ランダムパックに投稿する」を選択すると抽選を試せます。
 
 ```sh
+npm test
+npm run lint
+npm run typecheck
 npm run build
 npm run start
 ```
 
-## Typegen
+本番への反映は `npm run deploy` です。DBスキーマ変更がある場合は、互換性を確認したうえで先に `npx wrangler d1 migrations apply DB --remote` を実行します。`wrangler.toml` がバインディングとルーティングの管理元です。
 
-Generate types for your Cloudflare bindings in `wrangler.toml`:
+### データの扱い
 
-```sh
-npm run typegen
-```
+- ランダムパックへの投稿は初期状態ではオフです。
+- ランダム対象カードは保持します。対象外カードは作成から14日でページ・画像・OGPを取得できなくなります。
+- 日次Cron（03:00 JST）が期限切れカードと画像を最大100件ずつ削除します。途中失敗後も再実行できます。期限判定はアクセス時にも行います。
+- 画像・OGPのキャッシュは公開カードで最大1年、対象外カードで保存期限までです。再取得・304応答でも期限を延長しません。
+- DBはパラメータ付きクエリ、抽選は連続スロットのインデックス参照です。ギャラリーカードを管理操作で削除する場合は、スロットの連続性を維持する必要があります。
+- 投稿はIPごとに5回/分、動的な読み取り・画像キャッシュ未命中は120回/分、OGPキャッシュ未命中は20回/分です。Workersのレート制限は拠点単位の近似値であり、全世界共通の課金上限ではありません。
 
-You will need to rerun typegen whenever you make changes to `wrangler.toml`.
-
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then, deploy your app to Cloudflare Pages:
-
-```sh
-npm run deploy
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+移行の検証記録・バックアップ・切り戻し方針は [Cloudflare移行記録](docs/cloudflare-migration.md) を参照してください。
