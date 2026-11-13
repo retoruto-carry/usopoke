@@ -47,3 +47,5 @@ Keep the Pages project/custom-domain association while using the current Worker 
 An ambiguous D1 write failure preserves its uploaded image rather than risking deletion of a successfully committed card; the image key is logged for reconciliation. Retention is bounded, so a backlog above 100/day requires an operator to increase cleanup capacity deliberately. Rate limits are approximate per Cloudflare location, not a global spending cap. The local snapshot covers migration-time data only, not future posts.
 
 At R2 Standard rates, retained images cost about $0.11/month for storage before free allowances. Compute/request charges are additional. Supabase Pro remains $25/month if another project still needs it; removing one Micro project from a multi-project organization typically removes about $10/month of compute, not the entire Pro subscription. Verify the actual invoice and instance size before claiming exact savings.
+
+Post-cutover verification and fixes are recorded in [the 2026-11-14 production audit](production-audit.md), including the current deployed version and additional legacy Auth backup.

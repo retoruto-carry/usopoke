@@ -22,7 +22,13 @@ export const ShareButton = ({ imageUrl, text }: { imageUrl?: string, text: strin
     if (isMobile() && imageUrl && await isWebShareApiWithFilesAvailable()) {
       try {
         const response = await fetch(imageUrl);
+        if (!response.ok) {
+          throw new Error(`カード画像の取得に失敗しました (${response.status})`);
+        }
         const blob = await response.blob();
+        if (blob.type !== 'image/png' || blob.size === 0) {
+          throw new Error('カード画像の形式が不正です');
+        }
         const file = new File([blob], 'share.png', { type: 'image/png' });
 
         await navigator.share({
@@ -30,7 +36,8 @@ export const ShareButton = ({ imageUrl, text }: { imageUrl?: string, text: strin
           files: [file],
         });
         return
-      } catch {
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
         // Web Share API での共有が失敗した場合は、intentリンクにフォールバック
       }
     }

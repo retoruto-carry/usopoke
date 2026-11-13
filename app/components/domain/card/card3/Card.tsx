@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useSpring, animated, SpringValue, Interpolation } from "@react-spring/web";
+import { useSpring, animated, to, SpringValue, Interpolation } from "@react-spring/web";
 import "./card.css";
 import { updateCardInteractive } from "./updateCardInteractive";
 
@@ -10,7 +10,7 @@ type CardProps = {
 
 // CSSプロパティの型定義を修正
 type CustomCSSProperties = Omit<React.CSSProperties, 'transform'> & {
-  transform: Interpolation<number, string>;
+  transform: Interpolation<string>;
   '--ratiox': SpringValue<number>;
   '--ratioy': SpringValue<number>;
   '--mx': SpringValue<number> | Interpolation<number, string>;
@@ -143,7 +143,8 @@ export const Card3 = ({ width, children }: CardProps) => {
         style={{
           width: `${width}px`,
           height: `${width * 1.4}px`,
-          transform: springs.rotateX.to(
+          transform: to(
+            [springs.rotateX, springs.rotateY, springs.translateX, springs.translateY],
             (rx, ry, tx, ty) => `perspective(500px) rotateX(${rx}deg) rotateY(${ry}deg) translateX(${tx}px) translateY(${ty}px)`
           ),
           '--ratiox': springs.ratioX,

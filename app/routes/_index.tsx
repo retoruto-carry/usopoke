@@ -7,6 +7,20 @@ import { createCardAction } from "~/services/cardService";
 import { AppHeader } from "~/components/common/AppHeader";
 import { AppFooter } from "~/components/common/AppFooter";
 
+export function meta(): Route.MetaDescriptors {
+  const title = "うそポケ画像メーカー";
+  const description = "オリジナルのうそポケカードを作ったり、みんなのカードをランダムパックから引いたりして遊べます。";
+  return [
+    { title },
+    { name: "description", content: description },
+    { property: "og:type", content: "website" },
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { property: "og:url", content: "https://usopoke.asonde.me/" },
+    { property: "og:image", content: "https://usopoke.asonde.me/images/back_of_card_with_text.png" },
+  ];
+}
+
 export function action({ request, context }: Route.ActionArgs) {
   return createCardAction(request, context.get(appContext).cloudflare.env);
 }

@@ -1,3 +1,4 @@
+import { validateCardPng } from "./cardPng.server";
 import type { CreateCardData } from '../types/card';
 
 export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
@@ -44,19 +45,13 @@ export async function parseCardSubmission(request: Request): Promise<{data: Crea
   };
   const image = form.get('image');
   if (!(image instanceof File) || form.getAll('image').length !== 1 || image.size < 57 || image.size > MAX_UPLOAD_BYTES) throw new CardInputError('PNG画像を選択してください。', image instanceof File && image.size > MAX_UPLOAD_BYTES ? 413 : 400);
-  const bytes = new Uint8Array(await image.slice(0, 33).arrayBuffer());
-  const tail = new Uint8Array(await image.slice(-12).arrayBuffer());
-  const end = [0,0,0,0,73,69,78,68,174,66,96,130];
-  if (end.some((b,i)=>tail[i]!==b)) throw new CardInputError('PNG画像の形式が不正です。');
-  const signature = [137,80,78,71,13,10,26,10];
-  const view = new DataView(bytes.buffer);
-  const width = view.getUint32(16), height = view.getUint32(20);
-  if (image.type !== 'image/png' || signature.some((b,i)=>bytes[i]!==b) || view.getUint32(8)!==13 || String.fromCharCode(...bytes.slice(12,16))!=='IHDR' || !width || !height || width > 4096 || height > 4096 || width*height > 8_000_000) throw new CardInputError('PNG画像の形式が不正です。');
+  const validImage = await validateCardPng(image);
+  if (!validImage) throw new CardInputError('PNG画像の形式が不正です。');
   const gallery = text('show_in_gallery', 5);
   if (gallery !== 'true' && gallery !== 'false') throw new CardInputError('公開設定が不正です。');
   const twitter = text('twitter_username', 100).trim().replace(/^@/, '');
   if (twitter && !/^[A-Za-z0-9_]{1,15}$/.test(twitter)) throw new CardInputError('Xのユーザー名を確認してください。');
-  return { image, data: {
+  return { image: validImage, data: {
     name: text('name', 200), hp: text('hp', 30),
     move1_name: text('move1_name', 200), move1_damage: text('move1_damage', 30), move1_info: text('move1_info', 4000),
     move2_name: text('move2_name', 200), move2_damage: text('move2_damage', 30), move2_info: text('move2_info', 4000),

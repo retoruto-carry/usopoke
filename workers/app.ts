@@ -8,8 +8,7 @@ const handleRequest = createRequestHandler(
   import.meta.env.MODE,
 );
 
-function getRoutePath(request: Request) {
-  const path = new URL(request.url).pathname;
+function getRoutePath(path: string) {
   try {
     return decodeURI(path);
   } catch {
@@ -19,7 +18,13 @@ function getRoutePath(request: Request) {
 
 export default {
   async fetch(request, env, ctx) {
-    const path = getRoutePath(request);
+    const url = new URL(request.url);
+    if (url.protocol === "http:" && url.hostname === "usopoke.asonde.me") {
+      url.protocol = "https:";
+      url.port = "";
+      return Response.redirect(url, 308);
+    }
+    const path = getRoutePath(url.pathname);
     const draw = /^\/+draw(?:[/.]|$)/i.test(path);
     const cardPage = /^\/+cards(?:[/.]|$)/i.test(path);
     const dynamicRead = draw || cardPage;
