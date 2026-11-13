@@ -3,7 +3,9 @@ name = "usopoke"
 main = "workers/app.ts"
 compatibility_date = "2026-11-13"
 compatibility_flags = ["nodejs_compat"]
-workers_dev = true
+workers_dev = false
+preview_urls = false
+routes = [{ pattern = "usopoke.asonde.me/*", zone_id = "94cc81eaf25ae06c634c415b0c8bd337" }]
 
 [assets]
 directory = "./build/client"
